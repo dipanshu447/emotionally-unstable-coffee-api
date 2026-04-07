@@ -1,5 +1,6 @@
 import express from 'express';
-import { brewCoffee, cleanMachine, getClaims, getStatus, motivateUser, refillMachine, therapySession } from '../controllers/coffee.controller.js';
+import { brewCoffee, cleanMachine, getClaims, motivateUser, refillMachine, therapySession } from '../controllers/coffee.controller.js';
+import { getStatus } from '../controllers/status.controller.js';
 
 const router = express.Router();
 
