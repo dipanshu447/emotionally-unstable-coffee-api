@@ -10,3 +10,9 @@ Define simple rules:
 high burnout (>80) → angry
 low caffeine (<20) → tired
 low cleanliness → irritated
+
+Mental model (lock this in)
+state/ → data
+services/ → brain (logic like getMood)
+controllers/ → decision layer
+routes/ → HTTP wiring

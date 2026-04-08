@@ -3,7 +3,7 @@ export var state = {
     caffeineLevel: 70,        // 0–100
     burnout: 20,              // 0–100
     cleanliness: 80,          // 0–100
-    lastBrewAt: null,         // timestamp
+    // lastBrewAt: null,         // timestamp
     totalBrews: 0             // usage tracking
 };
 
