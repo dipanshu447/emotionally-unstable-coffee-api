@@ -30,8 +30,36 @@ export function getStatus() {
     }
 }
 
-export function brewCoffee() {
+export function brewCoffee(userInput) {
+    state.burnout += userInput.cups * 10;
+    state.caffeineLevel -= userInput.cups * 5;
+    state.totalBrews += userInput.cups;
+    state.caffeineLevel = Math.max(0, state.caffeineLevel);
+    state.burnout = Math.min(100, state.burnout);
 
+    const mood = getMood(state);
+    const status = decideStatus(state, mood);
+    let message = status.message;
+
+    if (status.statusCode === 200) {
+        message = `BREW OK. Serving ${userInput.cups} ${userInput.type}. ${status.message}`;
+    } else if (status.statusCode === 503) {
+        message = `BREW FAILED. ${status.message}`;
+    } else if (status.statusCode === 418) {
+        message = `HTCPCP ERROR 418: I am a teapot. ${status.message}`;
+    }
+    return {
+        "protocol": "HTCPCP/1.0",
+        "status": status.statusCode,
+        "potId": "coffee-pot-01",
+        "state": {
+            mood,
+            caffeineLevel: state.caffeineLevel,
+            burnout: state.burnout,
+            cleanliness: state.cleanliness
+        },
+        message
+    };
 }
 
 export function refillMachine() {
