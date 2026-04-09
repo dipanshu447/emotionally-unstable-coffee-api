@@ -98,9 +98,63 @@ export function refillMachine(userInput) {
         message
     }
 }
+// need to handle logic for existential crisis
+export function cleanMachine(mode = "normal") {
+    const baseMood = getMood(state);
+    if (baseMood === "existential_crisis") {
+        return {
+            protocol: "HTCPCP/1.0",
+            status: 418,
+            mood: baseMood,
+            message: "Cleaning won't fix the void inside me."
+        };
+    }
 
-export function cleanMachine() {
+    let increase = 30;
+    if (mode === "deep") increase = 60;
+    if (mode === "quick") increase = 15;
 
+    state.cleanliness = Math.min(100, state.cleanliness + increase);
+
+    const newBaseMood = getMood(state);
+    let mood = newBaseMood;
+    
+    if (
+        (newBaseMood === "angry" || newBaseMood === "tired") &&
+        state.cleanliness > 60
+    ) {
+        mood = "relieved";
+    }
+
+    const status = decideStatus(state, mood);
+    let message = "Cleaning in progress.";
+
+    if (state.cleanliness > 90) {
+        message = "I might actually cooperate now.";
+    } else if (state.cleanliness > 60) {
+        message = "Clean enough to pretend I enjoy this job.";
+    } else if (state.cleanliness > 30) {
+        message = "Not clean, not terrible. Like your life choices.";
+    } else {
+        message = "You want coffee from THIS machine? Brave.";
+    }
+
+    if (mood === "burned_out") {
+        message = "Clean, but I’m still done. No more work.";
+    }
+
+    if (mode === "deep") {
+        message += " Deep clean complete.";
+    } else if (mode === "quick") {
+        message += " That was... minimal effort.";
+    }
+
+    return {
+        protocol: "HTCPCP/1.0",
+        status: status.statusCode,
+        mood,
+        message
+    }
 }
 
 export function motivateUser() {

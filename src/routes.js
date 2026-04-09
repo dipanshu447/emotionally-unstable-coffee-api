@@ -1,5 +1,5 @@
 import express from 'express';
-import { brewCoffee, getStatus, refillMachine } from './engine.js';
+import { brewCoffee, cleanMachine, getStatus, refillMachine } from './engine.js';
 
 const router = express.Router();
 
@@ -20,7 +20,8 @@ router.post('/refill', (req, res) => {
 });
 
 router.post('/clean', (req, res) => {
-    res.send({ message: "its cleaning" });
+    const cleaning = cleanMachine(req.body.mode);
+    res.status(cleaning.status).send(cleaning);
 });
 
 router.get('/motivate', (req, res) => {
