@@ -11,8 +11,8 @@ high burnout (>80) → angry
 low caffeine (<20) → tired
 low cleanliness → irritated
 
-Mental model (lock this in)
-state/ → data
-services/ → brain (logic like getMood)
-controllers/ → decision layer
-routes/ → HTTP wiring
+src/
+  app.js
+  engine.js   ← ALL logic here
+  routes.js   ← ALL endpoints here
+server.js
