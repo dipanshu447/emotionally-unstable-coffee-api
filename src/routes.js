@@ -1,5 +1,5 @@
 import express from 'express';
-import { brewCoffee, getStatus } from './engine.js';
+import { brewCoffee, getStatus, refillMachine } from './engine.js';
 
 const router = express.Router();
 
@@ -15,7 +15,8 @@ router.post('/brew', (req, res) => {
 });
 
 router.post('/refill', (req, res) => {
-    res.send({ message: "its refilling" });
+    const refill = refillMachine(req.body);
+    res.status(refill.status).send(refill);
 });
 
 router.post('/clean', (req, res) => {
