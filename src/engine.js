@@ -13,78 +13,89 @@ export var state = {
 // 20% chance of unexpected response
 // 10% chance of “existential crisis”
 
-export function getStatus(req, res) {
+export function getStatus() {
     const mood = getMood(state);
-    const isDead = state.burnout >= 100;
-    decideStatus(req);
-    res.json({
-        status: isDead ? "dead" : "alive",
-        mood,
-        ...state
-    });
+    const status = decideStatus(state, mood);
+    return {
+        "protocol": "HTCPCP/1.0",
+        "status": status.statusCode,
+        "potId": "coffee-pot-01",
+        "state": {
+            "mood": status.mood,
+            "caffeineLevel": state.caffeineLevel,
+            "burnout": state.burnout,
+            "cleanliness": state.cleanliness
+        },
+        "message": status.message
+    }
 }
 
-export function brewCoffee(req, res) {
+export function brewCoffee() {
 
-
-    res.json({ 
-        message: "coffeee brewinggg"
-     });
 }
 
-export function refillMachine(req, res) {
-    res.json({ message: "machine is getting refilled" });
+export function refillMachine() {
+
 }
 
-export function cleanMachine(req, res) {
-    res.json({ message: "machine is getting cleaned" });
+export function cleanMachine() {
+
 }
 
-export function motivateUser(req, res) {
-    res.json({ message: "not in the mood to motivate" });
+export function motivateUser() {
+
 }
 
-export function therapySession(req, res) {
-    res.json({ message: "im fine nw" });
+export function therapySession() {
+
 }
 
-export function getClaims(req, res) {
-    res.json({ message: "coffeee is so good" });
+export function getClaims() {
+
 }
 
 export function getMood(state) {
-  if (Math.random() < 0.1) return "existential_crisis";
-  if (state.burnout > 85) return "burned_out";
-  if (state.burnout > 60 && state.caffeineLevel < 40) return "angry";
-  if (state.caffeineLevel < 20) return "tired";
-  if (state.cleanliness < 30) return "irritated";
-  if (state.caffeineLevel > 85 && state.burnout < 40) return "overcaffeinated";
-  return "neutral";
+    if (Math.random() < 0.1) return "existential_crisis";
+    if (state.burnout > 85) return "burned_out";
+    if (state.burnout > 60 && state.caffeineLevel < 40) return "angry";
+    if (state.caffeineLevel < 20) return "tired";
+    if (state.cleanliness < 30) return "irritated";
+    if (state.caffeineLevel > 85 && state.burnout < 40) return "overcaffeinated";
+    return "neutral";
 }
 
-export function decideStatus(req) {
-  const { path, method } = req;
-  checkRouteandMethod(path, method);
-}
-
-function checkRouteandMethod(path, method) {
-  const ROUTES = {
-    "/status": ["GET"],
-    "/brew": ["POST"],
-    "/refill": ["POST"],
-    "/clean": ["POST"],
-    "/motivate": ["GET"],
-    "/therapy": ["POST"],
-    "/claims": ["GET"],
-    "/preview": ["GET"]
-  };
-  const allowedMethod = ROUTES[path];
-
-  if(!allowedMethod){
-    return {
-      
+export function decideStatus(state, mood) {
+    if (mood === "existential_crisis") {
+        return {
+            statusCode: 418,
+            mood,
+            message: "System failure. Brewing is meaningless."
+        };
+    } else if (state.burnout > 90 || state.caffeineLevel <= 0) {
+        return {
+            statusCode: 418,
+            mood,
+            message: "I have nothing left to give."
+        };
+    } else if (state.burnout > 70 || state.cleanliness < 20) {
+        return {
+            statusCode: 503,
+            mood,
+            message: "I’m exhausted. Try later."
+        };
+    } else if (state.burnout < 30 && state.caffeineLevel > 60 && state.cleanliness > 70) {
+        return {
+            statusCode: 200,
+            mood,
+            message: "Operating at peak performance. Suspicious."
+        };
+    } else {
+        return {
+            statusCode: 200,
+            mood,
+            message: "Still functioning."
+        };
     }
-  }
 }
 
 // 1. Is request valid?

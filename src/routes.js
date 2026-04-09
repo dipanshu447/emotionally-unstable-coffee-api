@@ -1,9 +1,11 @@
 import express from 'express';
+import { getStatus } from './engine.js';
 
 const router = express.Router();
 
 router.get('/status', (req, res) => {
-    res.send({ message: "its status"});
+    const status = getStatus();
+    res.status(status.status).send(status);
 });
 
 router.post('/brew', (req, res) => {
