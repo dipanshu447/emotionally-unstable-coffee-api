@@ -1,5 +1,5 @@
 import express from 'express';
-import { brewCoffee, cleanMachine, getClaims, getStatus, motivateUser, refillMachine, therapySession } from './engine.js';
+import { brewCoffee, cleanMachine, getClaims, getPreview, getStatus, motivateUser, refillMachine, therapySession } from './engine.js';
 
 const router = express.Router();
 
@@ -37,6 +37,11 @@ router.post('/therapy', (req, res) => {
 router.get('/claims', (req, res) => {
     const claims = getClaims(); 
     res.status(claims.status).json(claims);
+});
+
+router.get('/preview', (req, res) => {
+    const preview = getPreview(); 
+    res.status(200).json(preview);
 });
 
 export default router;

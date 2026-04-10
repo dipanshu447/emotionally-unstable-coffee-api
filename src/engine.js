@@ -240,6 +240,76 @@ export function getClaims() {
     }
 }
 
+export function getPreview() {
+    if (Math.random() < 0.1) {
+        return {
+            title: "Emotionally Unstable Coffee API",
+            warning: "System refused to generate preview.",
+            error: "418: I am a teapot. Also not in the mood."
+        };
+    }
+    
+    const mood = getMood(state);
+
+    function simulateBrew() {
+        if (mood === "burned_out") {
+            return "503: I’ve brewed enough. I quit.";
+        }
+        if (mood === "existential_crisis") {
+            return "418: What is coffee? What is purpose?";
+        }
+        return "200: Coffee ready. Try not to overdo it.";
+    }
+
+    function simulateRefill() {
+        if (state.caffeineLevel > 80) {
+            return "409: I’m already overfilled.";
+        }
+        return "200: Refilled. I feel slightly better.";
+    }
+
+    function simulateTherapy() {
+        const responses = [
+            "Why are you trying to fix me?",
+            "…okay that helped a little.",
+            "I had dreams once.",
+            "This feels fake."
+        ];
+
+        return pickRandom(responses);
+    }
+
+    function randomChaos() {
+        const chaos = [
+            "Sometimes I just stop cooperating.",
+            "System stability is a myth.",
+            "I might refuse your next request.",
+            "Everything is temporary. Even coffee."
+        ];
+
+        return pickRandom(chaos);
+    }
+
+    return {
+        "title": "Emotionally Unstable Coffee API",
+        "warning": "This machine may refuse service at any time.",
+        "currentState": {
+            mood,
+            "caffeineLevel": state.caffeineLevel,
+            "burnout": state.burnout,
+            "cleanliness": state.cleanliness
+        },
+
+        "simulatedRequests": {
+            "brew": simulateBrew(),
+            "refill": simulateRefill(),
+            "therapy": simulateTherapy()
+        },
+
+        "randomChaos": randomChaos()
+    }
+}
+
 export function getMood(state) {
     if (Math.random() < 0.08) return "existential_crisis";
     if (state.burnout > 85) return "burned_out";
