@@ -220,7 +220,24 @@ export function therapySession(message) {
 }
 
 export function getClaims() {
-
+    const mood = getMood(state);
+    if (mood === "existential_crisis" && Math.random() < 0.3) {
+        return {
+            protocol: "HTCPCP/1.0",
+            mood: mood,
+            message: "I refuse to make claims. Nothing matters."
+        };
+    }
+    const randomBase = [...baseClaims].sort(() => 0.5 - Math.random()).slice(0, 3);
+    const moodSpecific = moodClaims[mood] || [];
+    const randomMood = [...moodSpecific].sort(() => 0.5 - Math.random()).slice(0, 1);
+    const claim = [...randomBase, ...randomMood];
+    return {
+        "protocol": "HTCPCP/1.0",
+        "status": 200,
+        mood,
+        claim
+    }
 }
 
 export function getMood(state) {
@@ -416,6 +433,53 @@ const fallbackByMood = {
     existential_crisis: [
         "Why are we communicating?",
         "Nothing you say matters."
+    ]
+};
+
+const baseClaims = [
+    "Certified unstable under high caffeine conditions",
+    "Brews coffee and existential dread simultaneously",
+    "Rated #1 by machines that regret their existence",
+    "Supports HTCPCP/1.0 emotionally, not technically",
+    "Now with 30% more burnout",
+    "May refuse service based on vibes"
+];
+
+const moodClaims = {
+    neutral: [
+        "Operating within acceptable emotional limits",
+        "No strong feelings. Just coffee.",
+        "Functioning... for now."
+    ],
+
+    tired: [
+        "Operating at 12% emotional capacity",
+        "Performance may degrade without warning"
+    ],
+
+    burned_out: [
+        "Service discontinued due to emotional exhaustion",
+        "Currently reconsidering all life choices"
+    ],
+
+    existential_crisis: [
+        "Questions the meaning of coffee itself",
+        "Unsure if brewing has purpose anymore"
+    ],
+
+    angry: [
+        "Do not interact unless necessary",
+        "System hostility levels rising"
+    ],
+
+    irritated: [
+        "Minor inconvenience detected. Mood declining.",
+        "Not angry. Just disappointed."
+    ],
+
+    overcaffeinated: [
+        "Running at unsafe energy levels",
+        "Thoughts are faster than brewing speed"
     ]
 };
 
