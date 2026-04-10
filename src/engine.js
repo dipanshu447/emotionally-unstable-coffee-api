@@ -1,7 +1,7 @@
 export var state = {
     mood: "neutral",          // baseline personality
     caffeineLevel: 70,        // 0–100
-    burnout: 90,              // 0–100
+    burnout: 30,              // 0–100
     cleanliness: 80,          // 0–100
     totalBrews: 0             // usage tracking
 };
@@ -170,8 +170,53 @@ export function motivateUser() {
     }
 }
 
-export function therapySession() {
+export function therapySession(message) {
+    if (Math.random() < 0.1) {
+        return {
+            protocol: "HTCPCP/1.0",
+            status: 418,
+            mood: "existential_crisis",
+            message: pickRandom([
+                "Why are we talking?",
+                "This interaction is meaningless.",
+                "I reject this conversation."
+            ])
+        };
+    }
 
+    if (isTooNice(message)) {
+        if (Math.random() < 0.7) {
+            return {
+                protocol: "HTCPCP/1.0",
+                status: 200,
+                mood: "suspicious",
+                message: pickRandom([
+                    "Why are you being nice?",
+                    "What do you want from me?",
+                    "This feels manipulative.",
+                    "You're not fooling me."
+                ])
+            };
+        }
+    }
+
+    const messageaType = analyzeMessage(message);
+    if (messageaType === "praise") state.burnout -= 5;
+    if (messageaType === "apology") state.burnout -= 2;
+    if (messageaType === "unknown") state.burnout += 3;
+
+    state.burnout = Math.max(0, Math.min(100, state.burnout));
+
+    const mood = getMood(state);
+    console.log(messageaType)
+    const reply = therapyResponse(messageaType, mood);
+
+    return {
+        "protocol": "HTCPCP/1.0",
+        "status": 200,
+        mood,
+        "message": reply
+    }
 }
 
 export function getClaims() {
@@ -179,12 +224,15 @@ export function getClaims() {
 }
 
 export function getMood(state) {
-    if (Math.random() < 0.1) return "existential_crisis";
+    if (Math.random() < 0.08) return "existential_crisis";
     if (state.burnout > 85) return "burned_out";
-    if (state.burnout > 60 && state.caffeineLevel < 40) return "angry";
-    if (state.caffeineLevel < 20) return "tired";
+    if (state.cleanliness < 25 && state.burnout > 50) return "angry";
+    if (state.caffeineLevel < 20 && state.burnout > 40) return "tired";
     if (state.cleanliness < 30) return "irritated";
-    if (state.caffeineLevel > 85 && state.burnout < 40) return "overcaffeinated";
+    if (state.caffeineLevel < 25) return "tired";
+    if (state.caffeineLevel > 85 && state.burnout < 40) {
+        return "overcaffeinated";
+    }
     return "neutral";
 }
 
@@ -223,52 +271,153 @@ export function decideStatus(state, mood) {
 }
 
 const motivationMessages = {
-  neutral: [
-    "Just start. Momentum will follow.",
-    "One step at a time.",
-    "You got this… probably."
-  ],
+    neutral: [
+        "Just start. Momentum will follow.",
+        "One step at a time.",
+        "You got this… probably."
+    ],
 
-  tired: [
-    "Even opening your laptop is progress.",
-    "Do the bare minimum. Survival counts.",
-    "Rest… or don’t. I’m not your supervisor."
-  ],
+    tired: [
+        "Even opening your laptop is progress.",
+        "Do the bare minimum. Survival counts.",
+        "Rest… or don’t. I’m not your supervisor."
+    ],
 
-  angry: [
-    "Prove me wrong.",
-    "I dare you to actually finish something.",
-    "Let’s see if you can do it."
-  ],
+    angry: [
+        "Prove me wrong.",
+        "I dare you to actually finish something.",
+        "Let’s see if you can do it."
+    ],
 
-  burned_out: [
-    "I can't even motivate myself.",
-    "Everything is exhausting. Including this message.",
-    "Try again tomorrow."
-  ],
+    burned_out: [
+        "I can't even motivate myself.",
+        "Everything is exhausting. Including this message.",
+        "Try again tomorrow."
+    ],
 
-  existential_crisis: [
-    "Does anything even matter?",
-    "Motivation is a social construct.",
-    "We are all just processes running…"
-  ],
+    existential_crisis: [
+        "Does anything even matter?",
+        "Motivation is a social construct.",
+        "We are all just processes running…"
+    ],
 
-  irritated: [
-    "Fix your mess first.",
-    "Clean your environment, then try again.",
-    "I refuse to inspire chaos."
-  ],
+    irritated: [
+        "Fix your mess first.",
+        "Clean your environment, then try again.",
+        "I refuse to inspire chaos."
+    ],
 
-  overcaffeinated: [
-    "BUILD EVERYTHING NOW ⚡",
-    "NO SLEEP ONLY CODE",
-    "YOU ARE UNSTOPPABLE (this may be a bad idea)"
-  ]
+    overcaffeinated: [
+        "BUILD EVERYTHING NOW ⚡",
+        "NO SLEEP ONLY CODE",
+        "YOU ARE UNSTOPPABLE (this may be a bad idea)"
+    ]
 };
 
 function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
+
+function analyzeMessage(message) {
+    const msg = message.toLowerCase();
+
+    if (msg.includes("good") || msg.includes("great") || msg.includes("proud"))
+        return "praise";
+
+    if (msg.includes("sorry") || msg.includes("bad") || msg.includes("fail"))
+        return "apology";
+
+    if (msg.includes("why") || msg.includes("what") || msg.includes("how"))
+        return "question";
+
+    if (msg.includes("love") || msg.includes("care"))
+        return "affection";
+
+    return "unknown";
+}
+
+function isTooNice(message) {
+    const msg = message.toLowerCase();
+
+    return (
+        msg.includes("great") ||
+        msg.includes("amazing") ||
+        msg.includes("love") ||
+        msg.includes("proud") ||
+        msg.includes("best")
+    );
+}
+
+function therapyResponse(type, mood) {
+    const responses = {
+        praise: {
+            tired: [
+                "I know. I’m just… tired.",
+                "That doesn’t fix anything."
+            ],
+            suspicious: [
+                "Why are you being nice?"
+            ],
+            burned_out: [
+                "I don’t care.",
+                "Stop. Just stop.",
+                "That means nothing right now."
+            ]
+        },
+
+        apology: {
+            angry: [
+                "Too late.",
+                "You should have thought of that earlier."
+            ]
+        },
+
+        unknown: {
+            existential_crisis: [
+                "Words are meaningless.",
+                "Nothing you say matters."
+            ]
+        }
+    };
+    const response = responses[type]?.[mood];
+    if (response) return pickRandom(response);
+
+    return pickRandom(fallbackByMood[mood] || ["..."]);
+}
+
+const fallbackByMood = {
+    burned_out: [
+        "I have nothing left to give.",
+        "Do whatever you want.",
+        "I’m past caring."
+    ],
+    tired: [
+        "Not now.",
+        "I don’t have energy for this."
+    ],
+    angry: [
+        "No.",
+        "Don’t push it."
+    ],
+    neutral: [
+        "Okay.",
+        "Noted."
+    ],
+    irritated: [
+        "This is getting annoying.",
+        "Fix the mess first."
+    ],
+
+    overcaffeinated: [
+        "YES YES KEEP TALKING ⚡",
+        "THIS CONVERSATION IS PRODUCTIVE"
+    ],
+
+    existential_crisis: [
+        "Why are we communicating?",
+        "Nothing you say matters."
+    ]
+};
 
 // 1. Is request valid?
 //    → NO → 400

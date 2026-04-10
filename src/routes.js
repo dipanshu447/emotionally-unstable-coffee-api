@@ -1,5 +1,5 @@
 import express from 'express';
-import { brewCoffee, cleanMachine, getStatus, motivateUser, refillMachine } from './engine.js';
+import { brewCoffee, cleanMachine, getStatus, motivateUser, refillMachine, therapySession } from './engine.js';
 
 const router = express.Router();
 
@@ -30,7 +30,8 @@ router.get('/motivate', (req, res) => {
 });
 
 router.post('/therapy', (req, res) => {
-    res.send({ message: "its threpy" });
+    const therepyResponse = therapySession(req.body.message);
+    res.status(therepyResponse.status).send(therepyResponse);
 });
 
 router.get('/claims', (req, res) => {
