@@ -6,11 +6,11 @@ export function getMood(state) {
     if (state.burnout > 85) return "burned_out";
     if (state.cleanliness < 25 && state.burnout > 50) return "angry";
     if (state.caffeineLevel < 20 && state.burnout > 40) return "tired";
-    if (state.cleanliness < 30) return "irritated";
-    if (state.caffeineLevel < 25) return "tired";
     if (state.caffeineLevel > 85 && state.burnout < 40) {
         return "overcaffeinated";
     }
+    if (state.cleanliness < 30) return "irritated";
+    if (state.caffeineLevel < 25) return "tired";
     return "neutral";
 }
 
