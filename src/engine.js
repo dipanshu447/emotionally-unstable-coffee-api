@@ -99,7 +99,7 @@ export function refillMachine(userInput) {
     }
 }
 // need to handle logic for existential crisis
-export function cleanMachine(mode = "normal") {
+export function cleanMachine(mode) {
     const baseMood = getMood(state);
     if (baseMood === "existential_crisis") {
         return {
