@@ -35,13 +35,47 @@ router.post('/therapy', (req, res) => {
 });
 
 router.get('/claims', (req, res) => {
-    const claims = getClaims(); 
+    const claims = getClaims();
     res.status(claims.status).json(claims);
 });
 
 router.get('/preview', (req, res) => {
-    const preview = getPreview(); 
+    const preview = getPreview();
     res.status(200).json(preview);
+});
+
+router.get('/info', (req, res) => {
+    const info = {
+        "name": "Emotionally Unstable Coffee API",
+        "version": "1.0.0",
+        "protocol": "HTCPCP/1.0 (in spirit)",
+        "description": "A REST API where a coffee machine behaves like a burned-out human.",
+        "author": {
+            "name": "Dipanshu Sahu",
+            "github": "https://github.com/dipanshu447",
+            "portfolio": "https://www.itsdipanshu.dev"
+        },
+        "repository": "https://github.com/dipanshu447/emotionally-unstable-coffee-api",
+        "system": {
+            "stateDriven": true,
+            "variables": ["mood", "caffeineLevel", "burnout", "cleanliness"],
+            "behavior": "Responses change based on internal emotional state"
+        },
+        "routes": [
+            "GET /status",
+            "POST /brew",
+            "POST /refill",
+            "POST /clean",
+            "GET /motivate",
+            "POST /therapy",
+            "GET /claims",
+            "GET /preview",
+            "GET /info"
+        ],
+        "warning": "This machine may refuse service at any time.",
+        "note": "Not responsible for emotional damage caused by coffee."
+    };
+    res.status(200).json(info);
 });
 
 export default router;
