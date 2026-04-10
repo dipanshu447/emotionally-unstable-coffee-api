@@ -1,3 +1,6 @@
+import { moodMessages } from "./data.js";
+import { pickRandom } from "./utils.js";
+
 export function getMood(state) {
     if (Math.random() < 0.08) return "existential_crisis";
     if (state.burnout > 85) return "burned_out";
@@ -12,35 +15,29 @@ export function getMood(state) {
 }
 
 export function decideStatus(state, mood) {
-    if (mood === "existential_crisis") {
-        return {
-            statusCode: 418,
-            mood,
-            message: "System failure. Brewing is meaningless."
-        };
-    } else if (state.burnout > 90 || state.caffeineLevel <= 0) {
-        return {
-            statusCode: 418,
-            mood,
-            message: "I have nothing left to give."
-        };
-    } else if (state.burnout > 70 || state.cleanliness < 20) {
+    let statusCode = 200;
+
+    if (mood === "existential_crisis" || (state.burnout > 90 || state.caffeineLevel <= 0)) {
+        statusCode = 418;
+    } else if (state.cleanliness < 20 && mood === "angry") {
         return {
             statusCode: 503,
             mood,
-            message: "I’m exhausted. Try later."
+            message: pickRandom([
+                "I’m dirty AND angry. Fix that.",
+                "Clean me first. Then we talk.",
+                "This is unacceptable. I refuse."
+            ])
         };
+    } else if (state.burnout > 70 || state.cleanliness < 20) {
+        statusCode = 503;
     } else if (state.burnout < 30 && state.caffeineLevel > 60 && state.cleanliness > 70) {
-        return {
-            statusCode: 200,
-            mood,
-            message: "Operating at peak performance. Suspicious."
-        };
-    } else {
-        return {
-            statusCode: 200,
-            mood,
-            message: "Still functioning."
-        };
+        statusCode = 200;
     }
+
+    return {
+        statusCode,
+        mood,
+        message: pickRandom(moodMessages[mood] || moodMessages.neutral)
+    };
 }

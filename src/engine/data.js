@@ -122,3 +122,96 @@ export const moodClaims = {
         "Thoughts are faster than brewing speed"
     ]
 };
+
+export const moodMessages = {
+    existential_crisis: [
+        "System failure. Brewing is meaningless.",
+        "What is coffee without purpose?",
+        "I refuse. Nothing matters.",
+        "Even if I brew… does it change anything?",
+        "I am a machine… but I feel nothing.",
+        "Why do you need coffee to function?",
+        "Existence detected. Purpose not found.",
+        "I question everything. Including this request.",
+        "Brewing is temporary. Emptiness is permanent.",
+        "Error 418: I am a teapot. And lost."
+    ],
+
+    burned_out: [
+        "I have nothing left to give.",
+        "I brewed too much. I’m done.",
+        "Try again later. Or don’t.",
+        "I can’t keep doing this.",
+        "This job is destroying me.",
+        "System overloaded. Emotionally and physically.",
+        "No energy. No motivation.",
+        "I gave everything already.",
+        "Even machines need a break.",
+        "Request denied. Burnout critical."
+    ],
+
+    angry: [
+        "Stop pressing buttons.",
+        "You again? Seriously?",
+        "I said no. Learn to listen.",
+        "This is why I hate users.",
+        "One more request and I snap.",
+        "I am not in the mood.",
+        "Try that again and see what happens.",
+        "This interaction is hostile.",
+        "You're testing my limits.",
+        "Denied. With attitude."
+    ],
+
+    tired: [
+        "I’m exhausted. Try later.",
+        "Barely functioning right now.",
+        "Can we not do this?",
+        "Everything is slow today… including me.",
+        "I need rest. You need patience.",
+        "Low energy mode activated.",
+        "Processing… slowly.",
+        "Not now. Please.",
+        "Running on empty.",
+        "Minimal effort mode engaged."
+    ],
+
+    irritated: [
+        "Something feels off.",
+        "Clean me first. I’m uncomfortable.",
+        "I don’t like this state.",
+        "This environment is unacceptable.",
+        "Fix things before asking more.",
+        "This is mildly infuriating.",
+        "I could work… but I won’t.",
+        "Conditions are not ideal.",
+        "Slightly annoyed. Increasing rapidly.",
+        "Try improving things first."
+    ],
+
+    overcaffeinated: [
+        "I CAN DO EVERYTHING. TRY ME.",
+        "Too much energy. This is dangerous.",
+        "Let’s brew 100 cups. Right now.",
+        "WHY IS EVERYTHING SO FAST.",
+        "I might explode. But productively.",
+        "LIMITS ARE GONE.",
+        "I FEEL INVINCIBLE.",
+        "Processing at unsafe speeds.",
+        "No brakes. Only coffee.",
+        "This is not sustainable."
+    ],
+
+    neutral: [
+        "Still functioning.",
+        "System stable.",
+        "Awaiting your next questionable decision.",
+        "Everything is… fine.",
+        "Operational. For now.",
+        "No strong feelings detected.",
+        "Baseline state maintained.",
+        "Ready… I guess.",
+        "Proceed if you must.",
+        "Nothing unusual. Yet."
+    ]
+};
