@@ -1,5 +1,5 @@
 import express from 'express';
-import { brewCoffee, cleanMachine, getClaims, getPreview, getStatus, motivateUser, refillMachine, therapySession } from './engine.js';
+import { brewCoffee, cleanMachine, getClaims, getPreview, getStatus, motivateUser, refillMachine, therapySession } from './engine/core.js';
 
 const router = express.Router();
 

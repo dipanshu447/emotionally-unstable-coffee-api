@@ -1,17 +1,7 @@
-export var state = {
-    mood: "neutral",          // baseline personality
-    caffeineLevel: 70,        // 0–100
-    burnout: 30,              // 0–100
-    cleanliness: 80,          // 0–100
-    totalBrews: 0             // usage tracking
-};
-
-// high burnout (>80) → angry
-// low caffeine (<20) → tired
-// low cleanliness → irritated
-
-// 20% chance of unexpected response
-// 10% chance of “existential crisis”
+import { state } from "./state.js";
+import { getMood, decideStatus } from "./mood.js";
+import { motivationMessages, fallbackByMood, baseClaims, moodClaims } from "./data.js";
+import { pickRandom, isTooNice, analyzeMessage } from "./utils.js";
 
 export function getStatus() {
     const mood = getMood(state);
@@ -98,6 +88,7 @@ export function refillMachine(userInput) {
         message
     }
 }
+
 // need to handle logic for existential crisis
 export function cleanMachine(mode) {
     const baseMood = getMood(state);
@@ -248,7 +239,7 @@ export function getPreview() {
             error: "418: I am a teapot. Also not in the mood."
         };
     }
-    
+
     const mood = getMood(state);
 
     function simulateBrew() {
@@ -310,131 +301,6 @@ export function getPreview() {
     }
 }
 
-export function getMood(state) {
-    if (Math.random() < 0.08) return "existential_crisis";
-    if (state.burnout > 85) return "burned_out";
-    if (state.cleanliness < 25 && state.burnout > 50) return "angry";
-    if (state.caffeineLevel < 20 && state.burnout > 40) return "tired";
-    if (state.cleanliness < 30) return "irritated";
-    if (state.caffeineLevel < 25) return "tired";
-    if (state.caffeineLevel > 85 && state.burnout < 40) {
-        return "overcaffeinated";
-    }
-    return "neutral";
-}
-
-export function decideStatus(state, mood) {
-    if (mood === "existential_crisis") {
-        return {
-            statusCode: 418,
-            mood,
-            message: "System failure. Brewing is meaningless."
-        };
-    } else if (state.burnout > 90 || state.caffeineLevel <= 0) {
-        return {
-            statusCode: 418,
-            mood,
-            message: "I have nothing left to give."
-        };
-    } else if (state.burnout > 70 || state.cleanliness < 20) {
-        return {
-            statusCode: 503,
-            mood,
-            message: "I’m exhausted. Try later."
-        };
-    } else if (state.burnout < 30 && state.caffeineLevel > 60 && state.cleanliness > 70) {
-        return {
-            statusCode: 200,
-            mood,
-            message: "Operating at peak performance. Suspicious."
-        };
-    } else {
-        return {
-            statusCode: 200,
-            mood,
-            message: "Still functioning."
-        };
-    }
-}
-
-const motivationMessages = {
-    neutral: [
-        "Just start. Momentum will follow.",
-        "One step at a time.",
-        "You got this… probably."
-    ],
-
-    tired: [
-        "Even opening your laptop is progress.",
-        "Do the bare minimum. Survival counts.",
-        "Rest… or don’t. I’m not your supervisor."
-    ],
-
-    angry: [
-        "Prove me wrong.",
-        "I dare you to actually finish something.",
-        "Let’s see if you can do it."
-    ],
-
-    burned_out: [
-        "I can't even motivate myself.",
-        "Everything is exhausting. Including this message.",
-        "Try again tomorrow."
-    ],
-
-    existential_crisis: [
-        "Does anything even matter?",
-        "Motivation is a social construct.",
-        "We are all just processes running…"
-    ],
-
-    irritated: [
-        "Fix your mess first.",
-        "Clean your environment, then try again.",
-        "I refuse to inspire chaos."
-    ],
-
-    overcaffeinated: [
-        "BUILD EVERYTHING NOW ⚡",
-        "NO SLEEP ONLY CODE",
-        "YOU ARE UNSTOPPABLE (this may be a bad idea)"
-    ]
-};
-
-function pickRandom(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function analyzeMessage(message) {
-    const msg = message.toLowerCase();
-
-    if (msg.includes("good") || msg.includes("great") || msg.includes("proud"))
-        return "praise";
-
-    if (msg.includes("sorry") || msg.includes("bad") || msg.includes("fail"))
-        return "apology";
-
-    if (msg.includes("why") || msg.includes("what") || msg.includes("how"))
-        return "question";
-
-    if (msg.includes("love") || msg.includes("care"))
-        return "affection";
-
-    return "unknown";
-}
-
-function isTooNice(message) {
-    const msg = message.toLowerCase();
-
-    return (
-        msg.includes("great") ||
-        msg.includes("amazing") ||
-        msg.includes("love") ||
-        msg.includes("proud") ||
-        msg.includes("best")
-    );
-}
-
 function therapyResponse(type, mood) {
     const responses = {
         praise: {
@@ -471,103 +337,3 @@ function therapyResponse(type, mood) {
 
     return pickRandom(fallbackByMood[mood] || ["..."]);
 }
-
-const fallbackByMood = {
-    burned_out: [
-        "I have nothing left to give.",
-        "Do whatever you want.",
-        "I’m past caring."
-    ],
-    tired: [
-        "Not now.",
-        "I don’t have energy for this."
-    ],
-    angry: [
-        "No.",
-        "Don’t push it."
-    ],
-    neutral: [
-        "Okay.",
-        "Noted."
-    ],
-    irritated: [
-        "This is getting annoying.",
-        "Fix the mess first."
-    ],
-
-    overcaffeinated: [
-        "YES YES KEEP TALKING ⚡",
-        "THIS CONVERSATION IS PRODUCTIVE"
-    ],
-
-    existential_crisis: [
-        "Why are we communicating?",
-        "Nothing you say matters."
-    ]
-};
-
-const baseClaims = [
-    "Certified unstable under high caffeine conditions",
-    "Brews coffee and existential dread simultaneously",
-    "Rated #1 by machines that regret their existence",
-    "Supports HTCPCP/1.0 emotionally, not technically",
-    "Now with 30% more burnout",
-    "May refuse service based on vibes"
-];
-
-const moodClaims = {
-    neutral: [
-        "Operating within acceptable emotional limits",
-        "No strong feelings. Just coffee.",
-        "Functioning... for now."
-    ],
-
-    tired: [
-        "Operating at 12% emotional capacity",
-        "Performance may degrade without warning"
-    ],
-
-    burned_out: [
-        "Service discontinued due to emotional exhaustion",
-        "Currently reconsidering all life choices"
-    ],
-
-    existential_crisis: [
-        "Questions the meaning of coffee itself",
-        "Unsure if brewing has purpose anymore"
-    ],
-
-    angry: [
-        "Do not interact unless necessary",
-        "System hostility levels rising"
-    ],
-
-    irritated: [
-        "Minor inconvenience detected. Mood declining.",
-        "Not angry. Just disappointed."
-    ],
-
-    overcaffeinated: [
-        "Running at unsafe energy levels",
-        "Thoughts are faster than brewing speed"
-    ]
-};
-
-// 1. Is request valid?
-//    → NO → 400
-
-// 2. Is system capable?
-//    → NO → 503
-
-// 3. Is there a conflict?
-//    → YES → 409
-
-// 4. Does mood refuse?
-//    → angry → 403
-//    → tired → 202
-
-// 5. Is there chaos override?
-//    → existential → 418
-
-// 6. Otherwise
-//    → 200
