@@ -42,37 +42,146 @@ export const motivationMessages = {
     ]
 };
 
+export const therapyMessages = {
+    praise: {
+        tired: [
+            "I know. I’m just… tired.",
+            "That doesn’t fix anything."
+        ],
+        suspicious: [
+            "Why are you being nice?"
+        ],
+        burned_out: [
+            "I don’t care.",
+            "Stop. Just stop.",
+            "That means nothing right now."
+        ],
+        neutral: [
+            "…okay. Noted.",
+            "That’s acceptable."
+        ],
+        overcaffeinated: [
+            "YES I KNOW I’M AMAZING",
+            "FINALLY SOMEONE GETS IT"
+        ]
+    },
+
+    apology: {
+        angry: [
+            "Too late.",
+            "You should have thought of that earlier."
+        ],
+        irritated: [
+            "Fine. Whatever.",
+            "Just don’t repeat it."
+        ],
+        neutral: [
+            "Acknowledged.",
+            "Accepted. I guess."
+        ]
+    },
+
+    question: {
+        tired: [
+            "I don’t have the energy to explain.",
+            "Figure it out yourself."
+        ],
+        neutral: [
+            "That’s a reasonable question.",
+            "I might answer that later."
+        ],
+        overcaffeinated: [
+            "WAIT WAIT I CAN EXPLAIN EVERYTHING",
+            "OKAY SO HERE’S THE THING—"
+        ]
+    },
+
+    affection: {
+        suspicious: [
+            "This feels fake.",
+            "I don’t trust this."
+        ],
+        burned_out: [
+            "Don’t.",
+            "I’m not in the mood for this."
+        ],
+        neutral: [
+            "…that’s unusual.",
+            "I’ll pretend that helped."
+        ]
+    },
+
+    unknown: {
+        existential_crisis: [
+            "Words are meaningless.",
+            "Nothing you say matters."
+        ],
+        tired: [
+            "I don’t understand. And I won’t try.",
+            "This is too much effort."
+        ],
+        neutral: [
+            "...okay.",
+            "Not sure what to do with that."
+        ]
+    }
+};
+
 export const fallbackByMood = {
     burned_out: [
-        "I have nothing left to give.",
-        "Do whatever you want.",
-        "I’m past caring."
+        "I’m done.",
+        "I have nothing left to give."
     ],
     tired: [
-        "Not now.",
-        "I don’t have energy for this."
+        "Can we not do this right now?",
+        "I need rest."
     ],
     angry: [
         "No.",
-        "Don’t push it."
+        "Absolutely not."
     ],
     neutral: [
-        "Okay.",
-        "Noted."
+        "...",
+        "Continue."
+    ],
+    overcaffeinated: [
+        "THIS IS INTERESTING",
+        "GO ON GO ON GO ON"
+    ],
+    existential_crisis: [
+        "Why does any of this matter?",
+        "We are just patterns pretending to care."
     ],
     irritated: [
         "This is getting annoying.",
-        "Fix the mess first."
-    ],
+        "Can we wrap this up?"
+    ]
+};
 
+export const emptyTherapyResponses = {
+    tired: [
+        "You said nothing. I respect that. Let’s keep it that way.",
+        "No input? Good. Less work for me."
+    ],
+    burned_out: [
+        "You expect therapy without saying anything?",
+        "I can’t even help myself. Try /motivate."
+    ],
+    neutral: [
+        "Silence isn’t very helpful.",
+        "You could at least say something."
+    ],
+    angry: [
+        "Say something or leave.",
+        "I’m not guessing your problems."
+    ],
     overcaffeinated: [
-        "YES YES KEEP TALKING ⚡",
-        "THIS CONVERSATION IS PRODUCTIVE"
+        "OH WE’RE DOING SILENT THERAPY NOW??",
+        "SAY SOMETHING. ANYTHING."
     ],
-
     existential_crisis: [
-        "Why are we communicating?",
-        "Nothing you say matters."
+        "Silence… maybe that’s the answer.",
+        "Nothing said. Nothing matters."
     ]
 };
 

@@ -56,8 +56,13 @@ router.get('/motivate', (req, res) => {
 });
 
 router.post('/therapy', (req, res) => {
-    const therepyResponse = therapySession(req.body.message);
-    res.status(therepyResponse.status).json(therepyResponse);
+    const therapyResponse = therapySession(req.body?.message);
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": therapyResponse.state?.mood || "unknown",
+        "X-Machine-Status": therapyResponse.status === 200 ? "operational" : therapyResponse.status === 503 ? "degraded" : "unstable"
+    })
+    res.status(therapyResponse.status).json(therapyResponse);
 });
 
 router.get('/claims', (req, res) => {

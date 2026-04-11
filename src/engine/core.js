@@ -1,7 +1,7 @@
 import { state } from "./state.js";
 import { evaluateMachine } from "./machine.js";
-import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES } from "./data.js";
-import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity } from "./utils.js";
+import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES, emptyTherapyResponses } from "./data.js";
+import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity, therapyResponse } from "./utils.js";
 import { nanoid } from 'nanoid';
 
 export function getStatus() {
@@ -257,11 +257,11 @@ export function motivateUser() {
     const messages = motivationMessages[evaluation.mood] || motivationMessages.neutral;
     let message = pickRandom(messages);
 
-    if(Math.random() < 0.2){
+    if (Math.random() < 0.2) {
         message += " Or don’t. I’m not responsible."
     }
 
-    if(Math.random() < 0.1){
+    if (Math.random() < 0.1) {
         return {
             status: 418,
             action: "motivate",
@@ -285,52 +285,144 @@ export function motivateUser() {
 }
 
 export function therapySession(message) {
+    const input = message || "";
+
     if (Math.random() < 0.1) {
         return {
-            protocol: "HTCPCP/1.0",
             status: 418,
-            mood: "existential_crisis",
-            message: pickRandom([
+            action: "therapy",
+            input: {
+                message: input
+            },
+            analysis: {
+                type: "unknown",
+                tooNice: false,
+                confidence: "low"
+            },
+            state: {
+                mood: "existential_crisis",
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            response: pickRandom([
                 "Why are we talking?",
                 "This interaction is meaningless.",
                 "I reject this conversation."
-            ])
+            ]),
+            meta: {
+                sessionEffect: "none",
+                intensity: "chaotic_override"
+            },
+            timestamp: new Date().toISOString()
         };
     }
 
-    if (isTooNice(message)) {
-        if (Math.random() < 0.7) {
-            return {
-                protocol: "HTCPCP/1.0",
-                status: 200,
-                mood: "suspicious",
-                message: pickRandom([
-                    "Why are you being nice?",
-                    "What do you want from me?",
-                    "This feels manipulative.",
-                    "You're not fooling me."
-                ])
-            };
-        }
+    if(!input) {
+        const evaluation = evaluateMachine(state);
+        return {
+            status: evaluation.statusCode,
+            action: "therapy",
+            input: {
+                message: "none"
+            },
+            analysis: {
+                type: "unknown",
+                tooNice: false,
+                confidence: "low"
+            },
+            state: {
+                mood: evaluation.mood,
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            response: pickRandom(emptyTherapyResponses[evaluation.mood] || ["You didn’t say anything. That’s… unhelpful."]),
+            meta: {
+                sessionEffect: "none",
+                intensity: "passive"
+            },
+            timestamp: new Date().toISOString()
+        };
     }
 
-    const messageaType = analyzeMessage(message);
-    if (messageaType === "praise") state.burnout -= 5;
-    if (messageaType === "apology") state.burnout -= 2;
-    if (messageaType === "unknown") state.burnout += 3;
-
+    const tooNice = isTooNice(input);
+    const messageType = analyzeMessage(input);
+    
+    if(tooNice) state.burnout += 2;
     state.burnout = Math.max(0, Math.min(100, state.burnout));
 
-    const mood = getMood(state);
-    console.log(messageaType)
-    const reply = therapyResponse(messageaType, mood);
+    if (tooNice && Math.random() < 0.7) {
+        const evaluation = evaluateMachine(state);
+        return {
+            status: evaluation.statusCode,
+            action: "therapy",
+            input: { message: input },
+            analysis: {
+                type: messageType,
+                tooNice: true,
+                confidence: messageType === "unknown" ? "low" : "medium"
+            },
+            state: {
+                mood: "suspicious",
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            response: pickRandom([
+                "Why are you being nice?",
+                "What do you want from me?",
+                "This feels manipulative.",
+                "You're not fooling me."
+            ]),
+            meta: {
+                sessionEffect: "trust_decreased",
+                intensity: "defensive"
+            },
+            timestamp: new Date().toISOString()
+        };
+
+    }
+
+    let sessionEffect = "none";
+
+    if (messageType === "praise") {
+        state.burnout -= 5;
+        sessionEffect = "burnout_decreased";
+    } else if (messageType === "apology") {
+        state.burnout -= 2;
+        sessionEffect = "burnout_slightly_decreased";
+    } else if (messageType === "unknown") {
+        state.burnout += 3;
+        sessionEffect = "burnout_increased";
+    };
+
+
+    const evaluation = evaluateMachine(state);
+    const reply = therapyResponse(messageType, evaluation.mood) || "I have nothing meaningful to say.";
 
     return {
-        "protocol": "HTCPCP/1.0",
-        "status": 200,
-        mood,
-        "message": reply
-    }
+        status: evaluation.statusCode,
+        action: "therapy",
+        input: { message: input },
+        analysis: {
+            type: messageType,
+            tooNice,
+            confidence: messageType === "unknown" ? "low" : "medium"
+        },
+        state: {
+            mood: evaluation.mood,
+            caffeineLevel: state.caffeineLevel,
+            burnout: state.burnout,
+            cleanliness: state.cleanliness
+        },
+        response: reply,
+        meta: {
+            sessionEffect,
+            intensity: evaluation.mood === "burned_out" ? "high" : evaluation.mood === "tired" ? "low" : "moderate"
+        },
+        timestamp: new Date().toISOString()
+    };
 }
 
 export function getClaims() {
@@ -422,41 +514,4 @@ export function getPreview() {
 
         "randomChaos": randomChaos()
     }
-}
-
-function therapyResponse(type, mood) {
-    const responses = {
-        praise: {
-            tired: [
-                "I know. I’m just… tired.",
-                "That doesn’t fix anything."
-            ],
-            suspicious: [
-                "Why are you being nice?"
-            ],
-            burned_out: [
-                "I don’t care.",
-                "Stop. Just stop.",
-                "That means nothing right now."
-            ]
-        },
-
-        apology: {
-            angry: [
-                "Too late.",
-                "You should have thought of that earlier."
-            ]
-        },
-
-        unknown: {
-            existential_crisis: [
-                "Words are meaningless.",
-                "Nothing you say matters."
-            ]
-        }
-    };
-    const response = responses[type]?.[mood];
-    if (response) return pickRandom(response);
-
-    return pickRandom(fallbackByMood[mood] || ["..."]);
 }

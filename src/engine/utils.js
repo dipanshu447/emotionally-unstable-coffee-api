@@ -1,4 +1,4 @@
-import { brewMessages } from "./data.js";
+import { brewMessages, fallbackByMood, therapyMessages } from "./data.js";
 
 export function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -60,4 +60,10 @@ export function getRefillIntensity(amount) {
     if (amount >= 25) return "strong";
     if (amount >= 10) return "normal";
     return "weak";
+}
+
+export function therapyResponse(type, mood) {
+    const responseSet = therapyMessages[type]?.[mood];
+    if (responseSet) return pickRandom(responseSet);
+    return pickRandom(fallbackByMood[mood] || ["..."]);
 }
