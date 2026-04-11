@@ -1,7 +1,7 @@
 import { state } from "./state.js";
 import { evaluateMachine } from "./machine.js";
-import { motivationMessages, fallbackByMood, baseClaims, moodClaims } from "./data.js";
-import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage } from "./utils.js";
+import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages } from "./data.js";
+import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity } from "./utils.js";
 import { nanoid } from 'nanoid';
 
 export function getStatus() {
@@ -34,7 +34,7 @@ export function getStatus() {
 export function brewCoffee(userInput) {
     const cups = Number(userInput?.cups) || 1;
     const type = userInput?.type || "coffee";
-    
+
     if (Math.random() < 0.1) {
         return {
             status: 418,
@@ -90,7 +90,7 @@ export function brewCoffee(userInput) {
             timestamp: new Date().toISOString()
         };
     }
-    
+
     let message = getBrewMessage(newEvaluation.mood, {
         cups,
         type,
@@ -119,26 +119,53 @@ export function brewCoffee(userInput) {
 }
 
 export function refillMachine(userInput) {
-    state.caffeineLevel += userInput.amount;
-    state.caffeineLevel = Math.min(100, state.caffeineLevel);
-
-    const mood = getMood(state);
-    const status = decideStatus(state, mood);
-    let message = "Refill acknowledged.";
-
-    if (state.caffeineLevel > 80) {
-        message = "Energy restored. I feel... unstable.";
-    } else if (state.caffeineLevel > 50) {
-        message = "Refill accepted. Functionality improving.";
-    } else {
-        message = "That barely helped.";
+    const amount = Number(userInput?.amount) || 10;
+    const intensity = getRefillIntensity(amount);
+    
+    if (Math.random() < 0.08) {
+        return {
+            status: 418,
+            action: "refill",
+            input: {
+                amount
+            },
+            derived: {
+                intensity
+            },
+            state: {
+                mood: "existential_crisis",
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            message: "Refill rejected. I am not a vessel anymore.",
+            timestamp: new Date().toISOString()
+        };
     }
 
+    state.caffeineLevel = Math.min(100, state.caffeineLevel + amount);
+    state.burnout = Math.max(0, state.burnout - Math.floor(amount / 5));
+    const evaluation = evaluateMachine(state);
+    let moodMessages = refillMessages[evaluation.mood]?.[intensity] || refillMessages.neutral[intensity] || refillMessages.neutral.normal;
+    let message = pickRandom(moodMessages || refillMessages.neutral.normal);
+
     return {
-        "protocol": "HTCPCP/1.0",
-        "status": status.statusCode,
-        mood,
-        message
+        status: evaluation.statusCode,
+        action: "refill",
+        input: {
+            amount
+        },
+        derived: {
+            intensity
+        },
+        state: {
+            mood: evaluation.mood,
+            caffeineLevel: state.caffeineLevel,
+            burnout: state.burnout,
+            cleanliness: state.cleanliness
+        },
+        message,
+        timestamp: new Date().toISOString()
     }
 }
 

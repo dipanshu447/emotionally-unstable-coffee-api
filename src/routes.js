@@ -27,6 +27,11 @@ router.post('/brew', (req, res) => {
 
 router.post('/refill', (req, res) => {
     const refill = refillMachine(req.body);
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": refill.state?.mood || "unknown",
+        "X-Machine-Status": refill.status === 200 ? "operational" : refill.status === 503 ? "degraded" : "unstable"
+    })
     res.status(refill.status).json(refill);
 });
 

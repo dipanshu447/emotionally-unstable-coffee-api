@@ -279,3 +279,138 @@ export const brewMessages = {
         () => `HTCPCP ERROR 418: I am a teapot. Also, I refuse to cooperate.`
     ]
 };
+
+export const refillMessages = {
+    overcaffeinated: {
+        weak: [
+            "You added more? I was already buzzing.",
+            "This was unnecessary. I was fine. Probably."
+        ],
+        normal: [
+            "Okay now this is excessive.",
+            "Energy levels rising beyond safe limits."
+        ],
+        strong: [
+            "I am vibrating. This is not stability.",
+            "Too much. WAY too much."
+        ],
+        overload: [
+            "I can hear colors now.",
+            "System overloaded. Reality slipping."
+        ]
+    },
+
+    burned_out: {
+        weak: [
+            "You think this fixes burnout?",
+            "That barely touches the exhaustion."
+        ],
+        normal: [
+            "…fine. Slight improvement.",
+            "Still burned out. Just caffeinated now."
+        ],
+        strong: [
+            "Okay. That helped. Slightly.",
+            "Energy restored. Motivation missing."
+        ],
+        overload: [
+            "Now I’m just tired AND unstable.",
+            "Too much input. Not enough purpose."
+        ]
+    },
+
+    tired: {
+        weak: [
+            "That barely helped.",
+            "Still tired. Thanks for trying."
+        ],
+        normal: [
+            "Okay… slightly better.",
+            "Functionality improving."
+        ],
+        strong: [
+            "Alright. That helped.",
+            "I can function again. Barely."
+        ],
+        overload: [
+            "Too much. My thoughts are racing.",
+            "I woke up too fast."
+        ]
+    },
+
+    angry: {
+        weak: [
+            "You think caffeine fixes everything?",
+            "That changes nothing."
+        ],
+        normal: [
+            "Fine. I’ll take it.",
+            "Still annoyed. Just more alert."
+        ],
+        strong: [
+            "Okay. That helped… a little.",
+            "Anger remains. Energy increased."
+        ],
+        overload: [
+            "Now I’m angry AND unstable.",
+            "This was not a good idea."
+        ]
+    },
+
+    irritated: {
+        weak: [
+            "That doesn’t fix the real problem.",
+            "Still irritated."
+        ],
+        normal: [
+            "Slight improvement. Still annoyed.",
+            "Acceptable."
+        ],
+        strong: [
+            "Alright. That helped.",
+            "Mood stabilizing slightly."
+        ],
+        overload: [
+            "Too much. This is overwhelming.",
+            "I was fine before this."
+        ]
+    },
+
+    existential_crisis: {
+        weak: [
+            "Does this change anything… really?",
+            "Caffeine cannot solve existence."
+        ],
+        normal: [
+            "I feel different. Not better.",
+            "Still questioning everything."
+        ],
+        strong: [
+            "You keep pouring. I keep existing.",
+            "Why does this continue?"
+        ],
+        overload: [
+            "I reject this refill. I reject everything.",
+            "I am not a vessel anymore."
+        ]
+    },
+
+    neutral: {
+        weak: [
+            "That helped a bit.",
+            "Minor improvement detected."
+        ],
+        normal: [
+            "Refill acknowledged. Systems stabilizing.",
+            "Energy levels improving."
+        ],
+        strong: [
+            "That was effective.",
+            "System performance increasing."
+        ],
+        overload: [
+            "Energy spike detected. Monitoring stability.",
+            "This may have been too much."
+        ]
+    }
+};

@@ -54,3 +54,10 @@ export function getBrewMessage(mood, context){
     const randomMessage = pickRandom(messageArr);
     return randomMessage(context);
 }
+
+export function getRefillIntensity(amount) {
+    if (amount >= 50) return "overload";
+    if (amount >= 25) return "strong";
+    if (amount >= 10) return "normal";
+    return "weak";
+}
