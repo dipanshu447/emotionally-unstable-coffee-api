@@ -37,8 +37,9 @@ export function brewCoffee(userInput) {
     if (Math.random() < 0.1) {
         return {
             status: 418,
-            message: "Existence is meaningless. Brewing is optional.",
+            action: "brew",
             request: { cups, type },
+            message: "Existence is meaningless. Brewing is optional.",
             timestamp: new Date().toISOString()
         };
     }
@@ -46,6 +47,7 @@ export function brewCoffee(userInput) {
     if (cups > 5) {
         return {
             status: 429,
+            action: "brew",
             request: { cups, type },
             message: `BREW DENIED. ${cups} cups? I'm a coffee machine, not a factory. Reduce expectations.`,
             timestamp: new Date().toISOString()
@@ -57,6 +59,7 @@ export function brewCoffee(userInput) {
     if (evaluation.statusCode !== 200) {
         return {
             status: evaluation.statusCode,
+            action: "brew",
             state: {
                 mood: evaluation.mood,
                 caffeineLevel: state.caffeineLevel,
@@ -79,6 +82,7 @@ export function brewCoffee(userInput) {
     if (newEvaluation.statusCode !== 200) {
         return {
             status: newEvaluation.statusCode,
+            action: "brew",
             state: {
                 mood: newEvaluation.mood,
                 caffeineLevel: state.caffeineLevel,
@@ -100,6 +104,7 @@ export function brewCoffee(userInput) {
 
     return {
         "status": newEvaluation.statusCode,
+        action: "brew",
         "orderId": `ORD-${nanoid(10)}`,
         "request": {
             cups,
