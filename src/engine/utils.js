@@ -1,3 +1,5 @@
+import { brewMessages } from "./data.js";
+
 export function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -45,4 +47,10 @@ export function getLevel(value, type = "default") {
     if (value < low) return "low";
     if (value < high) return "moderate";
     return "high";
+}
+
+export function getBrewMessage(mood, context){
+    const messagearr = brewMessages[mood] || brewMessages['neutral'];
+    const randomMessage = pickRandom(messagearr);
+    return randomMessage(context);
 }

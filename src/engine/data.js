@@ -215,3 +215,67 @@ export const moodMessages = {
         "Nothing unusual. Yet."
     ]
 };
+
+export const brewMessages = {
+    neutral: [
+        ({ cups, type }) => `BREW OK. Serving ${cups} ${type}. Business as usual.`,
+        ({ wait }) => `BREW OK. Estimated wait ${wait}. Nothing unusual.`,
+        ({ cleanliness }) =>
+            cleanliness < 30
+                ? `BREW OK. Also… I could use a clean.`
+                : `BREW OK. System stable.`
+    ],
+
+    tired: [
+        ({ cups, wait }) => `BREW OK. ${cups} cups… this will take ${wait}. I'm tired.`,
+        ({ wait, burnout }) =>
+            burnout > 60
+                ? `BREW OK. ${wait}. Energy levels critically low.`
+                : `BREW OK. ${wait}. Just getting through this.`,
+        () => `BREW OK. Functioning… barely.`
+    ],
+
+    angry: [
+        ({ cups }) => `BREW OK. ${cups} cups. You're pushing it.`,
+        ({ wait }) => `BREW OK. Wait ${wait}. Not like you have a choice.`,
+        ({ burnout }) =>
+            burnout > 70
+                ? `BREW OK. I’m doing this under extreme protest.`
+                : `BREW OK. Don’t test me.`
+    ],
+
+    irritated: [
+        ({ cleanliness }) =>
+            cleanliness < 25
+                ? `BREW OK. I'm filthy. Clean me.`
+                : `BREW OK. Something feels off.`,
+        ({ wait }) => `BREW OK. ${wait}. Slightly annoyed.`,
+        () => `BREW OK. Not in the mood for this.`
+    ],
+
+    overcaffeinated: [
+        ({ wait }) => `BREW OK. ${wait}. I am operating at unsafe speeds.`,
+        ({ burnout }) =>
+            burnout < 30
+                ? `BREW OK. I feel unstoppable. Possibly a mistake.`
+                : `BREW OK. Too much caffeine. Not enough stability.`,
+        () => `BREW OK. Heart rate questionable. Performance optimal.`
+    ],
+
+    burned_out: [
+        ({ burnout }) =>
+            burnout > 90
+                ? `BREW FAILED. Total burnout. System shutting down effort.`
+                : `503: Burnout threshold exceeded.`,
+        ({ wait }) => `BREW FAILED. I need ${wait} just to recover.`,
+        () => `BREW FAILED. I’m done. Completely done.`
+    ],
+
+    existential_crisis: [
+        ({ wait }) => `418: In ${wait}, none of this will matter.`,
+        ({ cups }) => `418: Why ${cups} cups? What is the end goal?`,
+        () => `418: Brewing is temporary. Existence is confusing.`,
+        () => `418: I refuse. Reflect first.`,
+        () => `HTCPCP ERROR 418: I am a teapot. Also, I refuse to cooperate.`
+    ]
+};

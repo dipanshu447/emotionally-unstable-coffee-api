@@ -1,7 +1,8 @@
 import { state } from "./state.js";
-import { getMood, decideStatus } from "./mood.js";
+import { evaluateMachine } from "./machine.js";
 import { motivationMessages, fallbackByMood, baseClaims, moodClaims } from "./data.js";
-import { pickRandom, isTooNice, analyzeMessage, getLevel } from "./utils.js";
+import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage } from "./utils.js";
+import { nanoid } from 'nanoid';
 
 export function getStatus() {
     const mood = getMood(state);
@@ -31,48 +32,89 @@ export function getStatus() {
 }
 
 export function brewCoffee(userInput) {
-    const mood = getMood(state);
-    const status = decideStatus(state, mood);
-    if (status.statusCode !== 200) {
+    const cups = Number(userInput?.cups) || 1;
+    const type = userInput?.type || "coffee";
+    
+    if (Math.random() < 0.1) {
         return {
-            protocol: "HTCPCP/1.0",
-            status: status.statusCode,
+            status: 418,
+            message: "Existence is meaningless. Brewing is optional.",
+            request: { cups, type },
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    if (cups > 5) {
+        return {
+            status: 429,
+            request: { cups, type },
+            message: `BREW DENIED. ${cups} cups? I'm a coffee machine, not a factory. Reduce expectations.`,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    const evaluation = evaluateMachine(state);
+
+    if (evaluation.statusCode !== 200) {
+        return {
+            status: evaluation.statusCode,
             state: {
-                mood,
+                mood: evaluation.mood,
                 caffeineLevel: state.caffeineLevel,
                 burnout: state.burnout,
                 cleanliness: state.cleanliness
             },
-            message: `BREW FAILED. ${status.message}`
+            message: `BREW FAILED. ${evaluation.message}`,
+            timestamp: new Date().toISOString()
         };
     }
-    state.totalBrews += userInput.cups;
-    state.caffeineLevel -= userInput.cups * 5;
-    state.caffeineLevel = Math.max(0, state.caffeineLevel);
-    state.burnout += userInput.cups * 10;
-    state.burnout = Math.min(100, state.burnout);
 
-    const newmood = getMood(state);
-    const newstatus = decideStatus(state, newmood);
-    let message = newstatus.message;
+    state.totalBrews += cups;
+    state.caffeineLevel = Math.max(0, state.caffeineLevel - cups * 5);
+    state.burnout = Math.min(100, state.burnout + cups * 10);
+    state.cleanliness = Math.max(0, state.cleanliness - cups * 3);
 
-    if (newstatus.statusCode === 200) {
-        message = `BREW OK. Serving ${userInput.cups} ${userInput.type}. ${newstatus.message}`;
-    } else if (newstatus.statusCode === 503) {
-        message = `BREW FAILED. ${newstatus.message}`;
-    } else if (newstatus.statusCode === 418) {
-        message = `HTCPCP ERROR 418: I am a teapot. ${newstatus.message}`;
+    const newEvaluation = evaluateMachine(state);
+    const estimatedWait = `${Math.min(10, 2 + Math.floor(state.burnout / 20) + cups)}s`;
+
+    if (newEvaluation.statusCode !== 200) {
+        return {
+            status: newEvaluation.statusCode,
+            state: {
+                mood: newEvaluation.mood,
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            message: `BREW FAILED. ${newEvaluation.message}`,
+            timestamp: new Date().toISOString()
+        };
     }
+    
+    let message = getBrewMessage(newEvaluation.mood, {
+        cups,
+        type,
+        wait: estimatedWait,
+        cleanliness: state.cleanliness,
+        burnout: state.burnout
+    });
+
     return {
-        "protocol": "HTCPCP/1.0",
-        "status": newstatus.statusCode,
+        "status": newEvaluation.statusCode,
+        "orderId": `ORD-${nanoid(10)}`,
+        "request": {
+            cups,
+            type
+        },
         "state": {
-            mood: newmood,
+            mood: newEvaluation.mood,
             caffeineLevel: state.caffeineLevel,
             burnout: state.burnout,
             cleanliness: state.cleanliness
         },
-        message
+        "estimatedWait": estimatedWait,
+        message,
+        "timestamp": new Date().toISOString()
     };
 }
 

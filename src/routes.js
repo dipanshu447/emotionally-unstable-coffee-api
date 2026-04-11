@@ -16,6 +16,12 @@ router.get('/status', (req, res) => {
 router.post('/brew', (req, res) => {
     const { cups = 1, type = "coffee" } = req.body || {};
     const brew = brewCoffee({ cups, type });
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": brew.state?.mood || "unknown",
+        "X-Estimated-Wait": brew.estimatedWait || "instant",
+        "X-Machine-Status": brew.status === 200 ? "operational" : "unstable"
+    })
     res.status(brew.status).json(brew);
 });
 
