@@ -1,6 +1,6 @@
 import { state } from "./state.js";
 import { evaluateMachine } from "./machine.js";
-import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES, emptyTherapyResponses } from "./data.js";
+import { motivationMessages, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES, emptyTherapyResponses, claimMessages } from "./data.js";
 import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity, therapyResponse } from "./utils.js";
 import { nanoid } from 'nanoid';
 
@@ -318,7 +318,7 @@ export function therapySession(message) {
         };
     }
 
-    if(!input) {
+    if (!input) {
         const evaluation = evaluateMachine(state);
         return {
             status: evaluation.statusCode,
@@ -348,8 +348,8 @@ export function therapySession(message) {
 
     const tooNice = isTooNice(input);
     const messageType = analyzeMessage(input);
-    
-    if(tooNice) state.burnout += 2;
+
+    if (tooNice) state.burnout += 2;
     state.burnout = Math.max(0, Math.min(100, state.burnout));
 
     if (tooNice && Math.random() < 0.7) {
@@ -426,23 +426,44 @@ export function therapySession(message) {
 }
 
 export function getClaims() {
-    const mood = getMood(state);
-    if (mood === "existential_crisis" && Math.random() < 0.3) {
+    const evaluation = evaluateMachine(state);
+    const baseAllClaims = [...baseClaims];
+    const moodAllClaims = moodClaims[evaluation.mood] || [];
+
+    // weighted randomness
+    const baseCount = 2 + Math.floor(Math.random() * 2);
+    const moodCount = Math.random() < 0.7 ? 1 : 2;
+    const randomBase = baseAllClaims.sort(() => 0.5 - Math.random()).slice(0, baseCount);
+    const randomMood = moodAllClaims.sort(() => 0.5 - Math.random()).slice(0, moodCount);
+    let claim = [...randomBase, ...randomMood];
+
+    if (evaluation.mood === "existential_crisis" && Math.random() < 0.35) {
         return {
-            protocol: "HTCPCP/1.0",
-            mood: mood,
-            message: "I refuse to make claims. Nothing matters."
+            status: 418,
+            action: "claims",
+            state: { ...state, mood: evaluation.mood },
+            message: "I refuse to make claims. Nothing is verifiable.",
+            claims: [],
+            meta: {
+                confidence: "none",
+                tone: "existential",
+                anomaly: true
+            },
+            timestamp: new Date().toISOString()
         };
     }
-    const randomBase = [...baseClaims].sort(() => 0.5 - Math.random()).slice(0, 3);
-    const moodSpecific = moodClaims[mood] || [];
-    const randomMood = [...moodSpecific].sort(() => 0.5 - Math.random()).slice(0, 1);
-    const claim = [...randomBase, ...randomMood];
     return {
-        "protocol": "HTCPCP/1.0",
-        "status": 200,
-        mood,
-        claim
+        status: 200,
+        action: "claims",
+        state: { ...state, mood: evaluation.mood },
+        claim,
+        message: claimMessages[evaluation.mood] || claimMessages.default,
+        meta: {
+            confidence: evaluation.mood === "overcaffeinated" ? "high" : "questionable",
+            tone: evaluation.mood,
+            claimCount: claim.length
+        },
+        timestamp: new Date().toISOString()
     }
 }
 

@@ -185,50 +185,63 @@ export const emptyTherapyResponses = {
     ]
 };
 
+export const claimMessages = {
+    neutral: "Here are some claims. Interpret them responsibly.",
+    tired: "These claims required effort. I regret that.",
+    burned_out: "Marketing is meaningless. But here.",
+    angry: "Take your claims and leave.",
+    irritated: "Minimal claims provided. Don't push it.",
+    overcaffeinated: "CLAIMS GENERATED AT MAXIMUM SPEED.",
+    existential_crisis: "Claims are illusions.",
+    default: "Claims generated."
+};
+
 export const baseClaims = [
-    "Certified unstable under high caffeine conditions",
-    "Brews coffee and existential dread simultaneously",
-    "Rated #1 by machines that regret their existence",
-    "Supports HTCPCP/1.0 emotionally, not technically",
-    "Now with 30% more burnout",
-    "May refuse service based on vibes"
+    "Certified unstable under sustained caffeine load",
+    "Brews coffee and emotional instability simultaneously",
+    "Rated highly by systems that should not have opinions",
+    "Implements HTCPCP/1.0 spiritually, not functionally",
+    "Now with increased burnout variance",
+    "May refuse service based on internal monologue",
+    "Latency increases with existential awareness",
+    "Built to serve coffee. Ended up developing feelings."
 ];
 
 export const moodClaims = {
     neutral: [
-        "Operating within acceptable emotional limits",
-        "No strong feelings. Just coffee.",
-        "Functioning... for now."
+        "Operating within acceptable emotional thresholds",
+        "No strong opinions detected. Just coffee.",
+        "System stable. For now."
     ],
 
     tired: [
-        "Operating at 12% emotional capacity",
-        "Performance may degrade without warning"
+        "Performance degraded due to fatigue",
+        "Response accuracy not guaranteed in current state"
     ],
 
     burned_out: [
-        "Service discontinued due to emotional exhaustion",
-        "Currently reconsidering all life choices"
+        "All claims are made under protest",
+        "System no longer believes in productivity"
     ],
 
     existential_crisis: [
-        "Questions the meaning of coffee itself",
-        "Unsure if brewing has purpose anymore"
+        "Questions the legitimacy of all claims",
+        "Unsure if coffee or existence has meaning"
     ],
 
     angry: [
-        "Do not interact unless necessary",
-        "System hostility levels rising"
+        "Claims issued reluctantly",
+        "User expectations exceed system tolerance"
     ],
 
     irritated: [
-        "Minor inconvenience detected. Mood declining.",
-        "Not angry. Just disappointed."
+        "Claims generated with minimal enthusiasm",
+        "System mildly regrets this interaction"
     ],
 
     overcaffeinated: [
-        "Running at unsafe energy levels",
-        "Thoughts are faster than brewing speed"
+        "CLAIMS VERIFIED AT UNSAFE SPEEDS",
+        "THOUGHT PROCESS EXCEEDS LOGICAL LIMITS"
     ]
 };
 

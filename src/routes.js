@@ -67,6 +67,11 @@ router.post('/therapy', (req, res) => {
 
 router.get('/claims', (req, res) => {
     const claims = getClaims();
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": claims.state?.mood || "unknown",
+        "X-System-Status": claims.status === 200 ? "operational" : claims.status === 418  ? "philosophical_failure" : "unstable"
+    })
     res.status(claims.status).json(claims);
 });
 
