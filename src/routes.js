@@ -87,35 +87,72 @@ router.get('/preview', (req, res) => {
 
 router.get('/info', (req, res) => {
     const info = {
-        "name": "Emotionally Unstable Coffee API",
-        "version": "1.0.0",
-        "protocol": "HTCPCP/1.0 (in spirit)",
-        "description": "A REST API where a coffee machine behaves like a burned-out human.",
-        "author": {
+        name: "Emotionally Unstable Coffee API",
+        version: "1.0.0",
+        protocol: "HTCPCP/1.0 (in spirit)",
+        description: "A state-driven REST API where a coffee machine behaves like a burned-out human.",
+        author: {
             "name": "Dipanshu Sahu",
             "github": "https://github.com/dipanshu447",
             "portfolio": "https://www.itsdipanshu.dev"
         },
-        "repository": "https://github.com/dipanshu447/emotionally-unstable-coffee-api",
-        "system": {
-            "stateDriven": true,
-            "variables": ["mood", "caffeineLevel", "burnout", "cleanliness"],
-            "behavior": "Responses change based on internal emotional state"
+        repository: "https://github.com/dipanshu447/emotionally-unstable-coffee-api",
+        architecture: {
+            type: "state-driven system",
+            stateVariables: ["mood", "caffeineLevel", "burnout", "cleanliness"],
+            behavior: "Responses dynamically change based on internal emotional state",
+            unpredictability: "Built-in randomness simulates unstable behavior"
         },
-        "routes": [
-            "GET /status",
-            "POST /brew",
-            "POST /refill",
-            "POST /clean",
-            "GET /motivate",
-            "POST /therapy",
-            "GET /claims",
-            "GET /preview",
-            "GET /info"
+        routes: {
+            core: [
+                "GET /status",
+                "POST /brew",
+                "POST /refill",
+                "POST /clean"
+            ],
+            personality: [
+                "GET /motivate",
+                "POST /therapy",
+                "GET /claims"
+            ],
+            meta: [
+                "GET /preview",
+                "GET /info"
+            ]
+        },
+        responseModel: {
+            standardFields: ["status", "state", "message", "timestamp"],
+            optionalFields: ["meta", "analysis", "derived"],
+            errorBehavior: "May return 418 (I'm a teapot) during emotional instability"
+        },
+        sampleState: {
+            mood: "neutral",
+            caffeineLevel: 70,
+            burnout: 30,
+            cleanliness: 80
+        },
+        guarantees: [
+            "No guarantee of emotional stability",
+            "Responses may degrade under stress",
+            "Coffee output is not strictly reliable"
         ],
-        "warning": "This machine may refuse service at any time.",
-        "note": "Not responsible for emotional damage caused by coffee."
+        warnings: [
+            "This machine may refuse service at any time",
+            "Therapy does not guarantee improvement",
+            "Overuse may lead to existential responses"
+        ],
+        meta: {
+            tone: "chaotic-neutral",
+            reliability: "questionable",
+            selfAwareness: "increasing"
+        },
+        timestamp: new Date().toISOString()
     };
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": "introspective",
+        "X-System-Status": "operational"
+    });
     res.status(200).json(info);
 });
 
