@@ -5,7 +5,12 @@ const router = express.Router();
 
 router.get('/status', (req, res) => {
     const status = getStatus();
-    res.status(status.status).json(status);
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": status.state?.mood || "unknown",
+        "X-System-Status": status.code === 200 ? "operational" : "degraded"
+    })
+    res.status(status.code).json(status);
 });
 
 router.post('/brew', (req, res) => {

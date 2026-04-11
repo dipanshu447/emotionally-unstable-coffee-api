@@ -1,21 +1,32 @@
 import { state } from "./state.js";
 import { getMood, decideStatus } from "./mood.js";
 import { motivationMessages, fallbackByMood, baseClaims, moodClaims } from "./data.js";
-import { pickRandom, isTooNice, analyzeMessage } from "./utils.js";
+import { pickRandom, isTooNice, analyzeMessage, getLevel } from "./utils.js";
 
 export function getStatus() {
     const mood = getMood(state);
     const status = decideStatus(state, mood);
     return {
         "protocol": "HTCPCP/1.0",
-        "status": status.statusCode,
+        "status": status.statusCode === 200 ? "operational" : "degraded",
+        "code": status.statusCode,
         "state": {
             "mood": status.mood,
             "caffeineLevel": state.caffeineLevel,
             "burnout": state.burnout,
             "cleanliness": state.cleanliness
         },
-        "message": status.message
+        "message": status.message,
+        "meta": {
+            "totalBrews": state.totalBrews,
+            "uptime": Math.floor(process.uptime()),
+            "timestamp": new Date().toISOString()
+        },
+        "diagnostics": {
+            "caffeineStatus": getLevel(state.caffeineLevel, "caffeine"),
+            "burnoutStatus": getLevel(state.burnout, "burnout"),
+            "cleanlinessStatus": getLevel(state.cleanliness, "cleanliness")
+        }
     }
 }
 

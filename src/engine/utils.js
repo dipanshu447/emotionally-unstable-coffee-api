@@ -31,3 +31,18 @@ export function isTooNice(message) {
         msg.includes("best")
     );
 }
+
+export function getLevel(value, type = "default") {
+    const ranges = {
+        default: [30, 70],
+        caffeine: [25, 75],
+        burnout: [40, 80],
+        cleanliness: [30, 70]
+    };
+
+    const [low, high] = ranges[type] || ranges.default;
+
+    if (value < low) return "low";
+    if (value < high) return "moderate";
+    return "high";
+}
