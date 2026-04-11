@@ -33,7 +33,7 @@ export function evaluateMachine(state) {
 
     if (mood === "existential_crisis" || (state.burnout > 90 || state.caffeineLevel <= 0)) {
         statusCode = 418;
-    } else if (mood === "burned_out" || state.burnout > 70) {
+    } else if (mood === "burned_out") {
         statusCode = 503;
     } else if (mood === "angry" && state.cleanliness < 20) {
         statusCode = 503;

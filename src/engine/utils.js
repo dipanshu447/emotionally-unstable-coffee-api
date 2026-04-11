@@ -50,7 +50,7 @@ export function getLevel(value, type = "default") {
 }
 
 export function getBrewMessage(mood, context){
-    const messagearr = brewMessages[mood] || brewMessages['neutral'];
-    const randomMessage = pickRandom(messagearr);
+    const messageArr = brewMessages[mood] || brewMessages.neutral;
+    const randomMessage = pickRandom(messageArr);
     return randomMessage(context);
 }
