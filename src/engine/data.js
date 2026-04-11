@@ -414,3 +414,63 @@ export const refillMessages = {
         ]
     }
 };
+
+export const CLEAN_MESSAGES = {
+    existential_crisis: [
+        "Cleaning won't fix the void inside me.",
+        "You polish the outside. I decay within.",
+        "What is cleanliness in a meaningless universe?"
+    ],
+
+    burned_out: [
+        "Clean, but I’m still done. No more work.",
+        "Shiny. Empty. Just like me.",
+    ],
+
+    angry: [
+        "Fine. I’ll clean. Don’t expect enthusiasm.",
+        "You made this mess. I’m just fixing your mistakes."
+    ],
+
+    tired: [
+        "Cleaning... slowly.",
+        "This better be worth it."
+    ],
+
+    neutral: [
+        "Cleaning in progress.",
+        "Maintenance mode activated."
+    ],
+
+    relieved: [
+        "Okay… this helped a little.",
+        "I can breathe again. Metaphorically."
+    ],
+
+    clean_high: [
+        "I might actually cooperate now.",
+        "This is the cleanest I've felt in ages."
+    ],
+
+    clean_mid: [
+        "Clean enough to pretend I enjoy this job.",
+    ],
+
+    clean_low: [
+        "Not clean, not terrible. Like your life choices.",
+    ],
+
+    disaster: [
+        "You want coffee from THIS machine? Brave.",
+    ],
+
+    mode_deep: [
+        "Deep clean complete.",
+        "That was… thorough."
+    ],
+
+    mode_quick: [
+        "That was... minimal effort.",
+        "Quick clean. Don’t expect miracles."
+    ]
+};

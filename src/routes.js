@@ -37,6 +37,11 @@ router.post('/refill', (req, res) => {
 
 router.post('/clean', (req, res) => {
     const cleaning = cleanMachine(req.body?.mode || "normal");
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": cleaning.state?.mood || "unknown",
+        "X-Machine-Status": cleaning.status === 200 ? "operational" : cleaning.status === 503 ? "degraded" : "unstable"
+    })
     res.status(cleaning.status).json(cleaning);
 });
 

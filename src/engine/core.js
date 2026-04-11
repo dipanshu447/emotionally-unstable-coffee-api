@@ -1,23 +1,22 @@
 import { state } from "./state.js";
 import { evaluateMachine } from "./machine.js";
-import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages } from "./data.js";
+import { motivationMessages, fallbackByMood, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES } from "./data.js";
 import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity } from "./utils.js";
 import { nanoid } from 'nanoid';
 
 export function getStatus() {
-    const mood = getMood(state);
-    const status = decideStatus(state, mood);
+    const evaluation = evaluateMachine(state);
     return {
         "protocol": "HTCPCP/1.0",
-        "status": status.statusCode === 200 ? "operational" : "degraded",
-        "code": status.statusCode,
+        "status": evaluation.statusCode === 200 ? "operational" : "degraded",
+        "code": evaluation.statusCode,
         "state": {
-            "mood": status.mood,
+            "mood": evaluation.mood,
             "caffeineLevel": state.caffeineLevel,
             "burnout": state.burnout,
             "cleanliness": state.cleanliness
         },
-        "message": status.message,
+        "message": evaluation.message,
         "meta": {
             "totalBrews": state.totalBrews,
             "uptime": Math.floor(process.uptime()),
@@ -121,7 +120,7 @@ export function brewCoffee(userInput) {
 export function refillMachine(userInput) {
     const amount = Number(userInput?.amount) || 10;
     const intensity = getRefillIntensity(amount);
-    
+
     if (Math.random() < 0.08) {
         return {
             status: 418,
@@ -169,62 +168,87 @@ export function refillMachine(userInput) {
     }
 }
 
-// need to handle logic for existential crisis
 export function cleanMachine(mode) {
-    const baseMood = getMood(state);
-    if (baseMood === "existential_crisis") {
+    mode = (mode || "normal").toLowerCase();
+    const evaluation = evaluateMachine(state);
+    if (evaluation.mood === "existential_crisis") {
         return {
-            protocol: "HTCPCP/1.0",
             status: 418,
-            mood: baseMood,
-            message: "Cleaning won't fix the void inside me."
+            action: "clean",
+            input: {
+                mode
+            },
+            state: {
+                mood: evaluation.mood,
+                caffeineLevel: state.caffeineLevel,
+                burnout: state.burnout,
+                cleanliness: state.cleanliness
+            },
+            derived: {
+                cleanlinessStatus: "irrelevant"
+            },
+            message: pickRandom(CLEAN_MESSAGES.existential_crisis),
+            timestamp: new Date().toISOString()
         };
     }
 
-    let increase = 30;
-    if (mode === "deep") increase = 60;
-    if (mode === "quick") increase = 15;
-
+    const increaseMap = {
+        deep: 60,
+        normal: 30,
+        quick: 15
+    };
+    const increase = increaseMap[mode] || increaseMap.normal;
     state.cleanliness = Math.min(100, state.cleanliness + increase);
+    state.burnout = Math.max(0, state.burnout - 2);
 
-    const newBaseMood = getMood(state);
-    let mood = newBaseMood;
+    const newEvaluation = evaluateMachine(state);
+    let mood = newEvaluation.mood;
 
-    if (
-        (newBaseMood === "angry" || newBaseMood === "tired") &&
-        state.cleanliness > 60
-    ) {
+    if ((mood === "angry" || mood === "tired") && state.cleanliness > 60) {
         mood = "relieved";
     }
 
-    const status = decideStatus(state, mood);
-    let message = "Cleaning in progress.";
-
-    if (state.cleanliness > 90) {
-        message = "I might actually cooperate now.";
-    } else if (state.cleanliness > 60) {
-        message = "Clean enough to pretend I enjoy this job.";
-    } else if (state.cleanliness > 30) {
-        message = "Not clean, not terrible. Like your life choices.";
-    } else {
-        message = "You want coffee from THIS machine? Brave.";
-    }
+    let message = pickRandom(CLEAN_MESSAGES[mood] || CLEAN_MESSAGES.neutral);
 
     if (mood === "burned_out") {
-        message = "Clean, but I’m still done. No more work.";
+        message = pickRandom(CLEAN_MESSAGES.burned_out);
+    }
+
+    if (state.cleanliness > 90) {
+        message += " " + pickRandom(CLEAN_MESSAGES.clean_high);
+    } else if (state.cleanliness > 60) {
+        message += " " + pickRandom(CLEAN_MESSAGES.clean_mid);
+    } else if (state.cleanliness > 30) {
+        message += " " + pickRandom(CLEAN_MESSAGES.clean_low);
+    } else {
+        message += " " + pickRandom(CLEAN_MESSAGES.disaster);
     }
 
     if (mode === "deep") {
-        message += " Deep clean complete.";
+        message += " " + pickRandom(CLEAN_MESSAGES.mode_deep);
     } else if (mode === "quick") {
-        message += " That was... minimal effort.";
+        message += " " + pickRandom(CLEAN_MESSAGES.mode_quick);
     }
 
+    const cleanlinessStatus = state.cleanliness > 80 ? "high" : state.cleanliness > 50 ? "moderate" : "low";
+
     return {
-        protocol: "HTCPCP/1.0",
-        status: status.statusCode,
-        mood,
-        message
+        status: newEvaluation.statusCode,
+        action: "clean",
+        input: {
+            mode
+        },
+        state: {
+            mood,
+            caffeineLevel: state.caffeineLevel,
+            burnout: state.burnout,
+            cleanliness: state.cleanliness
+        },
+        derived: {
+            cleanlinessStatus
+        },
+        message,
+        timestamp: new Date().toISOString()
     }
 }
 
