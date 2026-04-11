@@ -47,6 +47,11 @@ router.post('/clean', (req, res) => {
 
 router.get('/motivate', (req, res) => {
     const motivate = motivateUser();
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": motivate.state?.mood || "unknown",
+        "X-System-Status": motivate.status === 200 ? "operational" : motivate.status === 503 ? "degraded" : "unstable"
+    })
     res.status(motivate.status).json(motivate);
 });
 

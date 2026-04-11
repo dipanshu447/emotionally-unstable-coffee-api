@@ -253,15 +253,34 @@ export function cleanMachine(mode) {
 }
 
 export function motivateUser() {
-    const mood = getMood(state);
-    const messages = motivationMessages[mood] || motivationMessages["neutral"];
-    const message = pickRandom(messages);
+    const evaluation = evaluateMachine(state);
+    const messages = motivationMessages[evaluation.mood] || motivationMessages.neutral;
+    let message = pickRandom(messages);
+
+    if(Math.random() < 0.2){
+        message += " Or don’t. I’m not responsible."
+    }
+
+    if(Math.random() < 0.1){
+        return {
+            status: 418,
+            action: "motivate",
+            state: {
+                mood: evaluation.mood
+            },
+            message: "Motivation is a lie. I refuse to participate.",
+            timestamp: new Date().toISOString()
+        }
+    }
 
     return {
-        "protocol": "HTCPCP/1.0",
-        "status": 200,
-        mood,
-        message
+        status: evaluation.statusCode,
+        action: "motivate",
+        state: {
+            mood: evaluation.mood
+        },
+        message,
+        timestamp: new Date().toISOString()
     }
 }
 
