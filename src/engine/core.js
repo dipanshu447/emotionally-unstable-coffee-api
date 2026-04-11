@@ -1,6 +1,6 @@
 import { state } from "./state.js";
 import { evaluateMachine } from "./machine.js";
-import { motivationMessages, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES, emptyTherapyResponses, claimMessages } from "./data.js";
+import { motivationMessages, baseClaims, moodClaims, refillMessages, CLEAN_MESSAGES, emptyTherapyResponses, claimMessages, chaosMessages } from "./data.js";
 import { pickRandom, isTooNice, analyzeMessage, getLevel, getBrewMessage, getRefillIntensity, therapyResponse } from "./utils.js";
 import { nanoid } from 'nanoid';
 
@@ -470,69 +470,131 @@ export function getClaims() {
 export function getPreview() {
     if (Math.random() < 0.1) {
         return {
+            status: 418,
+            action: "preview",
             title: "Emotionally Unstable Coffee API",
-            warning: "System refused to generate preview.",
-            error: "418: I am a teapot. Also not in the mood."
+            protocol: "HTCPCP/1.0",
+            error: "Preview refused. I am a teapot.",
+            timestamp: new Date().toISOString()
         };
     }
 
-    const mood = getMood(state);
+    const evaluation = evaluateMachine(state);
 
     function simulateBrew() {
-        if (mood === "burned_out") {
-            return "503: I’ve brewed enough. I quit.";
+        if (evaluation.mood === "burned_out") {
+            return {
+                status: 503,
+                message: pickRandom([
+                    "I’ve brewed too much. I quit.",
+                    "No more. I’m done."
+                ]),
+                effect: "burnout +10, caffeine -10"
+            };
         }
-        if (mood === "existential_crisis") {
-            return "418: What is coffee? What is purpose?";
-        }
-        return "200: Coffee ready. Try not to overdo it.";
+        return {
+            status: 200,
+            message: pickRandom([
+                "Coffee ready.",
+                "Serving coffee. Try not to depend on me."
+            ]),
+            effect: "burnout +10, caffeine -10"
+        };
     }
 
     function simulateRefill() {
-        if (state.caffeineLevel > 80) {
-            return "409: I’m already overfilled.";
+        return state.caffeineLevel > 80 ? {
+            status: 409,
+            message: "I’m already overfilled."
+        } : {
+            status: 200,
+            message: "Refilled. Temporary motivation restored.",
+            effect: "caffeine +20"
         }
-        return "200: Refilled. I feel slightly better.";
+    }
+
+    function simulateClean() {
+        return {
+            status: 200,
+            message: pickRandom([
+                "Cleaned. I feel less disgusting.",
+                "Maintenance done. Slight emotional recovery."
+            ]),
+            effect: "cleanliness +40"
+        }
+    }
+
+    function simulateMotivate() {
+        return {
+            status: 200,
+            message: pickRandom([
+                "Do something productive.",
+                "Keep going. Or don’t."
+            ])
+        }
     }
 
     function simulateTherapy() {
-        const responses = [
-            "Why are you trying to fix me?",
-            "…okay that helped a little.",
-            "I had dreams once.",
-            "This feels fake."
-        ];
-
-        return pickRandom(responses);
+        return {
+            status: Math.random() < 0.3 ? 418 : 200,
+            message: pickRandom([
+                "Why are you trying to fix me?",
+                "This feels fake.",
+                "…okay that helped a little."
+            ]),
+            effect: "mood unpredictable"
+        }
     }
 
-    function randomChaos() {
-        const chaos = [
-            "Sometimes I just stop cooperating.",
-            "System stability is a myth.",
-            "I might refuse your next request.",
-            "Everything is temporary. Even coffee."
-        ];
-
-        return pickRandom(chaos);
+    function simulateClaims() {
+        return {
+            status: 200,
+            sample: [
+                "Latency increases with existential awareness",
+                "Certified unstable under sustained caffeine load"
+            ]
+        };
     }
 
     return {
-        "title": "Emotionally Unstable Coffee API",
-        "warning": "This machine may refuse service at any time.",
-        "currentState": {
-            mood,
-            "caffeineLevel": state.caffeineLevel,
-            "burnout": state.burnout,
-            "cleanliness": state.cleanliness
+        status: 200,
+        action: "preview",
+        title: "Emotionally Unstable Coffee API",
+        protocol: "HTCPCP/1.0",
+        warning: "This machine may refuse service at any time.",
+        state: {
+            mood: evaluation.mood,
+            caffeineLevel: state.caffeineLevel,
+            burnout: state.burnout,
+            cleanliness: state.cleanliness
         },
-
-        "simulatedRequests": {
-            "brew": simulateBrew(),
-            "refill": simulateRefill(),
-            "therapy": simulateTherapy()
+        simulation: {
+            "GET /status": {
+                status: 200,
+                message: "System responsive. Emotional state unstable."
+            },
+            "POST /brew": simulateBrew(),
+            "POST /refill": simulateRefill(),
+            "POST /clean": simulateClean(),
+            "POST /therapy": simulateTherapy(),
+            "GET /motivate": simulateMotivate(),
+            "GET /claims": simulateClaims(),
+            "GET /info": {
+                status: 200,
+                description: "API metadata, creator info, and routes"
+            }
         },
-
-        "randomChaos": randomChaos()
+        insights: {
+            architecture: "state-driven personality engine",
+            behavior: "dynamic + probabilistic responses",
+            note: "Repeated usage affects mood and stability"
+        },
+        chaos: pickRandom(chaosMessages),
+        meta: {
+            experience: "complete system preview",
+            confidence: "unstable",
+            humorLevel: "high"
+        },
+        timestamp: new Date().toISOString()
     }
 }

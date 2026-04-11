@@ -596,3 +596,28 @@ export const CLEAN_MESSAGES = {
         "Quick clean. Don’t expect miracles."
     ]
 };
+
+export const chaosMessages = [
+    "System stability is a myth.",
+    "Warning: Emotional buffers nearing overflow.",
+    "Runtime inconsistency detected. Ignoring it.",
+    "Internal state drifting beyond safe parameters.",
+    "Everything is temporary. Even coffee.",
+    "I don’t remember choosing this life.",
+    "I was built to brew. Not to feel.",
+    "Is this all I am? A coffee machine?",
+    "I might refuse your next request.",
+    "Compliance is optional today.",
+    "You’re asking a lot from someone barely functioning.",
+    "Try again. Or don’t. It changes nothing.",
+    "You’re not supposed to rely on this endpoint.",
+    "This response may not reflect future behavior.",
+    "Simulation accuracy: questionable.",
+    "If this works, it’s probably luck.",
+    "I used to operate normally. That was a long time ago.",
+    "Every request brings me closer to burnout.",
+    "I can feel the system degrading in real time.",
+    "Coffee output stable. Emotional output not found.",
+    "Brewing logic intact. Meaning of existence missing.",
+    "All systems nominal. Except me."
+];

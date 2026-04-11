@@ -70,14 +70,19 @@ router.get('/claims', (req, res) => {
     res.set({
         "X-Protocol": "HTCPCP/1.0",
         "X-Coffee-Mood": claims.state?.mood || "unknown",
-        "X-System-Status": claims.status === 200 ? "operational" : claims.status === 418  ? "philosophical_failure" : "unstable"
+        "X-System-Status": claims.status === 200 ? "operational" : claims.status === 418 ? "philosophical_failure" : "unstable"
     })
     res.status(claims.status).json(claims);
 });
 
 router.get('/preview', (req, res) => {
     const preview = getPreview();
-    res.status(200).json(preview);
+    res.set({
+        "X-Protocol": "HTCPCP/1.0",
+        "X-Coffee-Mood": preview.state?.mood ?? "unknown",
+        "X-System-Status": preview.status === 200 ? "operational" : preview.status === 418 ? "philosophical_failure" : "unstable"
+    })
+    res.status(preview.status).json(preview);
 });
 
 router.get('/info', (req, res) => {
