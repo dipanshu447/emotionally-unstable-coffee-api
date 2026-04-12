@@ -246,7 +246,7 @@ This API is deployed on Render and is publicly accessible via the base URL above
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/dipanshu447/emotionally-unstable-coffee-api
+git clone https://github.com/dipanshu447/emotionally-unstable-coffee-api.git
 cd emotionally-unstable-coffee-api
 ```
 
