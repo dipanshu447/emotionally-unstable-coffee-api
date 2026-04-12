@@ -10,7 +10,7 @@ export function evaluateMachine(state) {
     else if (state.burnout > 85) {
         mood = "burned_out";
     }
-    else if (state.cleanliness < 25 && state.burnout > 50) {
+    else if (state.cleanliness < 40 && state.burnout > 50) {
         mood = "angry";
     }
     else if (state.caffeineLevel < 20) {

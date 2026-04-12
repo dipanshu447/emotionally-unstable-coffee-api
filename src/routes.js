@@ -6,7 +6,6 @@ import { state } from './engine/state.js';
 const router = express.Router();
 
 router.get('/status', (req, res) => {
-    applyPassiveDecay(state);
     const status = getStatus();
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -85,7 +84,6 @@ router.get('/claims', (req, res) => {
 });
 
 router.get('/preview', (req, res) => {
-    applyPassiveDecay(state);
     const preview = getPreview();
     res.set({
         "X-Protocol": "HTCPCP/1.0",

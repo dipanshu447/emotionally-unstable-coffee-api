@@ -74,7 +74,7 @@ export function brewCoffee(userInput) {
     state.totalBrews += cups;
     state.caffeineLevel = Math.max(0, state.caffeineLevel - cups * 5);
     state.burnout = Math.min(100, state.burnout + (4 + cups * 4));
-    state.cleanliness = Math.max(0, state.cleanliness - cups * 3);
+    state.cleanliness = Math.max(0, state.cleanliness - cups * 6);
 
     const newEvaluation = evaluateMachine(state);
     const estimatedWait = `${Math.min(10, 2 + Math.floor(state.burnout / 20) + cups)}s`;
