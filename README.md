@@ -4,6 +4,24 @@
 
 Because even machines have bad days.
 
+## 🌐 Base URL
+
+```
+https://emotionally-unstable-coffee-api.onrender.com
+```
+
+### Example
+
+```
+GET /status
+```
+
+```
+https://emotionally-unstable-coffee-api.onrender.com/status
+```
+
+> Note: Responses are dynamic and may vary based on the system’s internal state.
+
 ## Overview
 
 The **Emotionally Unstable Coffee API** simulates a coffee machine with internal emotional state, memory, and behavioral degradation.
@@ -80,15 +98,15 @@ This makes `/therapy` feel unpredictable, but still based on logic.
 | GET    | `/preview`  | Full system simulation |
 | GET    | `/info`     | API metadata           |
 
-# API Usage & Examples
+## API Usage & Examples
 
 > Note: Real responses are more detailed. Examples below are simplified for readability.
 
-## GET /status
+### GET /status
 
 Returns current system state.
 
-### Response
+#### Response
 
 ```json
 {
@@ -104,11 +122,11 @@ Returns current system state.
 }
 ```
 
-## POST /brew
+### POST /brew
 
 Brews coffee and mutates system state.
 
-### Request
+#### Request
 
 ```json
 {
@@ -117,7 +135,7 @@ Brews coffee and mutates system state.
 }
 ```
 
-### Example Response (simplified)
+#### Example Response (simplified)
 
 ```json
 {
@@ -127,9 +145,9 @@ Brews coffee and mutates system state.
 }
 ```
 
-## POST /refill
+### POST /refill
 
-### Request
+#### Request
 
 ```json
 {
@@ -137,7 +155,7 @@ Brews coffee and mutates system state.
 }
 ```
 
-### Example Response
+#### Example Response
 
 ```json
 {
@@ -146,9 +164,9 @@ Brews coffee and mutates system state.
 }
 ```
 
-## POST /clean
+### POST /clean
 
-### Request
+#### Request
 
 ```json
 {
@@ -156,7 +174,7 @@ Brews coffee and mutates system state.
 }
 ```
 
-### Example Response
+#### Example Response
 
 ```json
 {
@@ -165,15 +183,15 @@ Brews coffee and mutates system state.
 }
 ```
 
-## GET /motivate
+### GET /motivate
 
 Returns motivation based on mood.
 
-## POST /therapy
+### POST /therapy
 
 Interact with the coffee machine emotionally.
 
-### Request
+#### Request
 
 ```json
 {
@@ -181,7 +199,7 @@ Interact with the coffee machine emotionally.
 }
 ```
 
-### Example Response
+#### Example Response
 
 ```json
 {
@@ -190,15 +208,15 @@ Interact with the coffee machine emotionally.
 }
 ```
 
-## GET /claims
+### GET /claims
 
 Returns generated claims.
 
-## GET /preview
+### GET /preview
 
 Simulates entire API behavior in one response.
 
-## GET /info
+### GET /info
 
 Returns metadata and API structure.
 
@@ -216,6 +234,12 @@ What this means in practice:
 * Adopts the idea of a "coffee machine over HTTP" from HTCPCP
 
 In short, it behaves like a normal API, but with personality.
+
+## Deployment
+
+This API is deployed on Render and is publicly accessible via the base URL above.
+
+> Availability and behavior may vary depending on runtime conditions and system state.
 
 # Installation & Setup
 
