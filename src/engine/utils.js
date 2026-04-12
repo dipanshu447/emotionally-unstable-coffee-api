@@ -67,3 +67,7 @@ export function therapyResponse(type, mood) {
     if (responseSet) return pickRandom(responseSet);
     return pickRandom(fallbackByMood[mood] || ["..."]);
 }
+
+export function applyPassiveDecay(state) {
+    state.burnout = Math.max(0, state.burnout - 2);
+}

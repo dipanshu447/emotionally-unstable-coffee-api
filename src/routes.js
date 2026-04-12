@@ -1,9 +1,12 @@
 import express from 'express';
 import { brewCoffee, cleanMachine, getClaims, getPreview, getStatus, motivateUser, refillMachine, therapySession } from './engine/core.js';
+import { applyPassiveDecay } from './engine/utils.js';
+import { state } from './engine/state.js';
 
 const router = express.Router();
 
 router.get('/status', (req, res) => {
+    applyPassiveDecay(state);
     const status = getStatus();
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -14,6 +17,7 @@ router.get('/status', (req, res) => {
 });
 
 router.post('/brew', (req, res) => {
+    applyPassiveDecay(state);
     const { cups = 1, type = "coffee" } = req.body || {};
     const brew = brewCoffee({ cups, type });
     res.set({
@@ -26,6 +30,7 @@ router.post('/brew', (req, res) => {
 });
 
 router.post('/refill', (req, res) => {
+    applyPassiveDecay(state);
     const refill = refillMachine(req.body);
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -36,6 +41,7 @@ router.post('/refill', (req, res) => {
 });
 
 router.post('/clean', (req, res) => {
+    applyPassiveDecay(state);
     const cleaning = cleanMachine(req.body?.mode || "normal");
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -46,6 +52,7 @@ router.post('/clean', (req, res) => {
 });
 
 router.get('/motivate', (req, res) => {
+    applyPassiveDecay(state);
     const motivate = motivateUser();
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -56,6 +63,7 @@ router.get('/motivate', (req, res) => {
 });
 
 router.post('/therapy', (req, res) => {
+    applyPassiveDecay(state);
     const therapyResponse = therapySession(req.body?.message);
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -66,6 +74,7 @@ router.post('/therapy', (req, res) => {
 });
 
 router.get('/claims', (req, res) => {
+    applyPassiveDecay(state);
     const claims = getClaims();
     res.set({
         "X-Protocol": "HTCPCP/1.0",
@@ -76,6 +85,7 @@ router.get('/claims', (req, res) => {
 });
 
 router.get('/preview', (req, res) => {
+    applyPassiveDecay(state);
     const preview = getPreview();
     res.set({
         "X-Protocol": "HTCPCP/1.0",

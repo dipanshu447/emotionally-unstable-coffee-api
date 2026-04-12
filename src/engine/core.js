@@ -73,7 +73,7 @@ export function brewCoffee(userInput) {
 
     state.totalBrews += cups;
     state.caffeineLevel = Math.max(0, state.caffeineLevel - cups * 5);
-    state.burnout = Math.min(100, state.burnout + cups * 10);
+    state.burnout = Math.min(100, state.burnout + (4 + cups * 4));
     state.cleanliness = Math.max(0, state.cleanliness - cups * 3);
 
     const newEvaluation = evaluateMachine(state);
@@ -148,7 +148,7 @@ export function refillMachine(userInput) {
     }
 
     state.caffeineLevel = Math.min(100, state.caffeineLevel + amount);
-    state.burnout = Math.max(0, state.burnout - Math.floor(amount / 5));
+    state.burnout = Math.max(0, state.burnout - (5 + Math.floor(amount / 4)));
     const evaluation = evaluateMachine(state);
     let moodMessages = refillMessages[evaluation.mood]?.[intensity] || refillMessages.neutral[intensity] || refillMessages.neutral.normal;
     let message = pickRandom(moodMessages || refillMessages.neutral.normal);
@@ -202,9 +202,14 @@ export function cleanMachine(mode) {
         normal: 30,
         quick: 15
     };
+    const burnoutReductionMap = {
+        deep: 20,
+        normal: 15,
+        quick: 8
+    };
     const increase = increaseMap[mode] || increaseMap.normal;
     state.cleanliness = Math.min(100, state.cleanliness + increase);
-    state.burnout = Math.max(0, state.burnout - 2);
+    state.burnout = Math.max(0, state.burnout - burnoutReductionMap[mode]);
 
     const newEvaluation = evaluateMachine(state);
     let mood = newEvaluation.mood;
@@ -402,7 +407,7 @@ export function therapySession(message) {
         sessionEffect = "burnout_increased";
     };
 
-
+    state.burnout = Math.max(0, Math.min(100, state.burnout));
     const evaluation = evaluateMachine(state);
     const reply = therapyResponse(messageType, evaluation.mood) || "I have nothing meaningful to say.";
 
