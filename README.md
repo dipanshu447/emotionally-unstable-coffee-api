@@ -4,6 +4,8 @@
 
 Because even machines have bad days.
 
+![Preview](./.github/preview.gif)
+
 ## 🌐 Base URL
 
 ```
