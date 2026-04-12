@@ -6,8 +6,6 @@
 
 ## Live API
 
----
-
 **Base URL**
 
 ```
@@ -29,6 +27,10 @@ Every response reflects how it *feels*.
 Sometimes it serves coffee.
 Sometimes it refuses.
 Sometimes it spirals.
+
+## Quick Demo
+
+Watch the API in action: [Watch Demo Video](https://drive.google.com/file/d/13uz1Eovod3ChN9oYO0YkuQm_x91xzrCs/view?usp=sharing)
 
 ## Core Idea
 
