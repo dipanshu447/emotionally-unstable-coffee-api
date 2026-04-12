@@ -41,9 +41,19 @@ At the heart of the system is a mutable internal state:
 The API evolves based on usage:
 
 * Brewing - ↓ caffeine, ↑ burnout, ↓ cleanliness
-* Refill - ↑ caffeine, ↓ burnout (slightly)
+* Refill - ↑ caffeine, ↓ burnout (moderately, scales with amount)
 * Clean - ↑ cleanliness, ↓ burnout
-* Therapy - small emotional changes (usually reduces burnout, but may increase slightly depending on interaction)
+* Therapy - context-aware emotional interaction that can increase or decrease burnout depending on tone and intent
+
+### Passive Recovery
+
+The system includes a small passive recovery mechanism:
+
+- Burnout decreases slightly with each interaction
+- Prevents the machine from getting permanently stuck in a degraded state
+- Allows gradual emotional recovery over time
+
+This ensures the system remains dynamic and self-correcting.
 
 ### How Therapy Behaves
 
