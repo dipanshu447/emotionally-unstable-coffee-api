@@ -34,6 +34,10 @@ Sometimes it serves coffee.
 Sometimes it refuses.
 Sometimes it questions existence.
 
+## Quick Demo
+
+Watch the API in action: [Watch Demo Video](https://drive.google.com/file/d/13uz1Eovod3ChN9oYO0YkuQm_x91xzrCs/view?usp=sharing)
+
 ## Core Concept (State-Driven Engine)
 
 At the heart of the system is a mutable internal state:
