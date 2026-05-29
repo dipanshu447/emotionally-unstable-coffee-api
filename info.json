@@ -1,28 +1,44 @@
 {
-  "tagline": "A state-driven REST API where a coffee machine behaves like a burned-out human",
+  "portfolio_order": 3,
   "featured": true,
+  "card_tags": [
+    "REST API",
+    "Node.js",
+    "State Logic"
+  ],
+  "tagline": "State-driven REST API that simulates dynamic system behavior through evolving internal states.",
   "status": "completed",
   "details": {
-    "overview": "An unconventional REST API that simulates a coffee machine with emotions, burnout, and evolving behavior. Each request mutates internal state, causing responses to change over time. Inspired by HTCPCP, the API blends standard HTTP practices with personality-driven logic, making it feel less like a service and more like a system that reacts.",
+    "overview": "Emotionally Unstable Coffee API is a backend project that simulates a coffee machine with changing internal states such as mood, burnout, cleanliness, and caffeine levels. Instead of returning fixed responses, the API evolves based on user interactions, demonstrating state management, custom HTTP responses, and creative backend design.",
     "image": "https://github.com/dipanshu447/emotionally-unstable-coffee-api/raw/main/.github/preview.gif",
+    "engineering_challenges": [
+      "Designing a state-driven system where API behavior changes over time",
+      "Managing multiple internal states and their interactions",
+      "Implementing dynamic HTTP responses based on system conditions",
+      "Creating predictable logic while maintaining non-deterministic behavior"
+    ],
     "key_features": [
-      "State-driven engine with mood, caffeine, burnout, and cleanliness",
-      "Dynamic responses that change based on usage patterns",
-      "Unpredictable behavior including refusal states (418, 503)",
-      "Therapy endpoint for emotional interaction with the system",
-      "Preview route to simulate full API behavior in one request",
-      "Custom headers reflecting internal system state"
+      "State-driven engine with mood, burnout, caffeine, and cleanliness tracking",
+      "Dynamic responses that evolve based on usage patterns",
+      "Custom HTTP status codes and response headers",
+      "Preview endpoint to simulate complete system behavior",
+      "Interactive endpoints that modify internal system state"
     ],
     "what_i_learned": [
-      "Designing stateful systems instead of static APIs",
-      "Modeling behavior and unpredictability in backend logic",
-      "Balancing humor with real engineering structure",
-      "Using HTTP semantics creatively (status codes, headers)",
-      "Building APIs that focus on experience, not just data"
+      "Designing stateful backend systems instead of traditional CRUD APIs",
+      "Using HTTP status codes and headers beyond standard implementations",
+      "Modeling complex system behavior through backend logic",
+      "Balancing creative ideas with practical software engineering concepts"
     ],
     "tech_stack": {
-      "backend": ["Node.js", "Express.js"],
-      "tools": ["Render", "nanoid"]
+      "backend": [
+        "Node.js",
+        "Express.js"
+      ],
+      "tools": [
+        "Render",
+        "nanoid"
+      ]
     }
   }
 }
