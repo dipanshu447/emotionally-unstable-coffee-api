@@ -1,6 +1,6 @@
 {
   "portfolio_order": 3,
-  "featured": true,
+  "featured": false,
   "card_tags": [
     "REST API",
     "Node.js",
